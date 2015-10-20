@@ -2,10 +2,23 @@
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+#change shell 
+sudo chsh -s /bin/zsh "$(whoami)"
+
 # vim
-ln -s ${BASEDIR}/vimrc ~/.vimrc
-ln -s ${BASEDIR}/vim/ ~/.vim
+if [ ! -f ~/.vimrc ]; then
+    ln -s "${BASEDIR}/vimrc" "$HOME/.vimrc"
+fi
+
+if [ ! -d ~/.vim ]; then
+    ln -s "${BASEDIR}/vim/" "$HOME/.vim"
+fi
 
 # zsh
-ln -s ${BASEDIR}/zshrc ~/.zshrc
-ln -s ${BASEDIR}/oh-my-zsh ~/.oh-my-zsh
+if [ ! -f "$HOME/.zshrc" ]; then
+    ln -s "${BASEDIR}/zshrc" "$HOME/.zshrc"
+fi
+
+if [ ! -d ~/.oh-my-zsh ]; then
+    git clone https://github.com/robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
+fi
