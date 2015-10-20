@@ -10,7 +10,10 @@ set nocompatible " Make Vim more useful
 set clipboard=unnamed,autoselect " Use the OS clipboard by default (on versions compiled with `+clipboard`)
 set wildmenu " Enhance command-line completion
 set cursorline " Highlight current line
-set tabstop=4 " Make tabs as wide as two spaces
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
 set hlsearch " Highlight searches
 set ignorecase " Ignore case of searches
 set incsearch " Highlight dynamically as pattern is typed
@@ -20,8 +23,6 @@ set ruler " Show the cursor position
 set title " Show the filename in the window titlebar
 set showcmd " Show the (partial) command as it’s being typed
 set smartindent
-set softtabstop=4
-set expandtab
 set showmatch
 set encoding=utf-8
 set t_Co=256 
