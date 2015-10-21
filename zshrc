@@ -4,6 +4,7 @@ then
 else
 
     ZSH=$HOME/.oh-my-zsh
+    ZSH_CUSTOM=$HOME/.zsh-custom
     ZSH_THEME="secwall"
     DISABLE_AUTO_UPDATE="true"
     plugins=(colored-man git python tmux systemadmin sudo history history-substring-search colorize) 
