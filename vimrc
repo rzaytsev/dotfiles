@@ -1,4 +1,5 @@
 colorscheme Tomorrow-Night-Eighties
+"colorscheme seoul256
 
 syntax on               " syntax highlighting
 set ai                  " auto indenting
@@ -10,10 +11,7 @@ set nocompatible " Make Vim more useful
 set clipboard=unnamed,autoselect " Use the OS clipboard by default (on versions compiled with `+clipboard`)
 set wildmenu " Enhance command-line completion
 set cursorline " Highlight current line
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
+set tabstop=4 " Make tabs as wide as two spaces
 set hlsearch " Highlight searches
 set ignorecase " Ignore case of searches
 set incsearch " Highlight dynamically as pattern is typed
@@ -22,10 +20,15 @@ set showmode " Show the current mode
 set ruler " Show the cursor position
 set title " Show the filename in the window titlebar
 set showcmd " Show the (partial) command as it’s being typed
+" indent
 set smartindent
+set softtabstop=2
+set shiftwidth=4
+set expandtab
+
 set showmatch
 set encoding=utf-8
-set t_Co=256 
+set t_Co=256
 set backspace=indent,eol,start
 set hidden
 
@@ -39,11 +42,12 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 Plugin 'bling/vim-airline'
-Plugin 'nanotech/jellybeans.vim'
 Plugin 'kana/vim-fakeclip'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-commentary'
 Plugin 'scrooloose/nerdtree.git'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'elentok/plaintasks.vim'
 Plugin 'wincent/command-t'
 Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-fugitive'
@@ -52,7 +56,10 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-sensible'
 Plugin 'scrooloose/syntastic.git'
 Plugin 'tpope/vim-markdown'
+" Plugin 'jpalardy/vim-slime'
+Plugin 'Raimondi/delimitMate'
 
+Plugin 'matschaffer/vim-islime2'
 filetype plugin indent on      " use the file type plugins
 
 "hi CursorLine cterm=NONE ctermbg=237
@@ -66,12 +73,19 @@ autocmd BufReadPost *
 \ endif |
 \ endif
 
-let mapleader="\<space>"
+set list
+set listchars=tab:•·,trail:•,extends:>,precedes:<
+
+let mapleader="\<Space>"
+
+nnoremap <Leader>o :CtrlP<CR>
+nnoremap <Leader>w :w<CR>
+nmap <Leader><Leader> V
 
 " Explore mode
 let g:netrw_liststyle=3
 nmap <leader>e :NERDTreeToggle<CR>
-nmap <silent> <Leader>\ :nohlsearch<CR>
+nmap <silent> <Leader>/ :nohlsearch<CR>
 
 nmap <Leader>d diw
 nmap <Leader>c ciw
@@ -99,35 +113,45 @@ inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>0
 cnoremap <C-a>  <Home>
 cnoremap <C-e>  <End>
- 
+
 
 cmap w!! w !sudo tee % >/dev/null
-command R !./% 
+command R !./%
 
-nnoremap <silent> <S-Up>   :move-2<CR>==
-nnoremap <silent> <S-Down> :move+<CR>==
-xnoremap <silent> <S-Up>   :move-2<CR>gv=gv
-xnoremap <silent> <S-Down> :move'>+<CR>gv=gv
+nnoremap <silent> <S-UP>   :move-2<CR>==
+nnoremap <silent> <S-DOWN> :move+<CR>==
+xnoremap <silent> <S-UP>   :move-2<CR>gv=gv
+xnoremap <silent> <S-DOWN> :move'>+<CR>gv=gv
 
-vmap <Leader>y "+y
-vmap <Leader>d "+d
-nmap <Leader>p "+p
-nmap <Leader>P "+P
-vmap <Leader>p "+p
-vmap <Leader>P "+P
-
+" vmap <Leader>y "+y
+" vmap <Leader>d "+d
+" nmap <Leader>p "+p
+" nmap <Leader>P "+P
+" vmap <Leader>p "+p
+" vmap <Leader>P "+P
+:
+" delte trailing white spaces
+nnoremap <Leader>rtw :%s/\s\+$//e<CR>
+match Error /\s\+$/
 
 " imap <S-Tab> <C-P>
-:nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
-:nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
-:nmap j gj
-:nmap k gk
-:nmap <S-i> i_<Esc>r
-:nmap <S-C> <Plug>CommentaryLine
-:nmap \l :setlocal number!<CR>
-:nmap <Leader>o :set paste!<CR>
+nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
+nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
+nnoremap <C-Tab> :bnext<CR>
+nmap j gj
+nmap k gk
+nmap <S-i> i_<Esc>r
+nmap <S-C> <Plug>CommentaryLine
 inoremap jj <ESC>l
 inoremap оо <ESC>l
+
+nmap <Leader>p :set paste!<CR>
+map <Leader>ra :%s/
+nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
+nmap <leader>b :CtrlPBuffer<cr>
+nmap <silent> <leader>ev :e ~/.vimrc<CR>
+nmap <silent> <leader>sv :so ~/.vimrc<CR>
+nmap <leader>todo :e ~/notes/ops.todo<cr>
 
 :iab <expr> 0--- strftime("# %c")
 
@@ -136,10 +160,6 @@ let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-
-
-" nmap <silent> <leader>ev :e $MYVIMRC<CR>
-" nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
@@ -168,4 +188,14 @@ let g:syntastic_python_checkers = ['pylint']
 " set foldmethod=indent   " Fold based on indent
 " set foldnestmax=3       " Deepest fold is 3 levels
 " set nofoldenable        " Don't fold by default
+
+" vim-slime settings
+" let g:slime_target = "tmux"
+" let g:slime_python_ipython = 1
+" let g:slime_default_config = {"socket_name": "default", "target_pane": ":"}
+
+let g:islime2_29_mode=1
+
+
+
 
