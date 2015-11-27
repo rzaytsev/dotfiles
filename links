@@ -3,3 +3,4 @@
 .zshrc=zshrc
 .oh-my-zsh=oh-my-zsh
 .zsh-custom=zsh-custom
+.tmux.conf=tmux.conf
