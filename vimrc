@@ -1,6 +1,6 @@
 colorscheme Tomorrow-Night-Eighties
 "colorscheme seoul256
-
+set shortmess=at
 syntax on               " syntax highlighting
 set ai                  " auto indenting
 set history=400         " keep 400 lines of history
@@ -35,6 +35,8 @@ set hidden
 set foldmethod=indent
 set foldlevel=99
 
+set visualbell
+
 "set iskeyword-=_
 
 let g:airline_powerline_fonts = 1
@@ -56,10 +58,10 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-sensible'
 Plugin 'scrooloose/syntastic.git'
 Plugin 'tpope/vim-markdown'
-" Plugin 'jpalardy/vim-slime'
+Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'Raimondi/delimitMate'
-
 Plugin 'matschaffer/vim-islime2'
+
 filetype plugin indent on      " use the file type plugins
 
 "hi CursorLine cterm=NONE ctermbg=237
@@ -76,6 +78,11 @@ autocmd BufReadPost *
 set list
 set listchars=tab:•·,trail:•,extends:>,precedes:<
 
+augroup rainbow_code
+    autocmd!
+    autocmd FileType lisp,clojure,scheme,python,ruby RainbowParentheses
+augroup END
+
 let mapleader="\<Space>"
 
 nnoremap <Leader>o :CtrlP<CR>
@@ -85,18 +92,20 @@ nmap <Leader><Leader> V
 " Explore mode
 let g:netrw_liststyle=3
 nmap <leader>e :NERDTreeToggle<CR>
+nmap <silent> // :nohlsearch<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
+
+nmap <S-Enter> O<Esc>
+nmap <CR> o<Esc>
 
 nmap <Leader>d diw
 nmap <Leader>c ciw
 
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
+" map <up> <nop>
+" map <down> <nop>
+" map <left> <nop>
+" map <right> <nop>
 
-nnoremap B ^
-nnoremap E $
 
 " Easy window navigation
 map <C-h> <C-w>h
@@ -108,12 +117,11 @@ set splitbelow
 set splitright
 
 nmap <C-e> $
-nmap <C-a> 0
+nmap <C-a> ^
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>0
 cnoremap <C-a>  <Home>
 cnoremap <C-e>  <End>
-
 
 cmap w!! w !sudo tee % >/dev/null
 command R !./%
@@ -129,9 +137,10 @@ xnoremap <silent> <S-DOWN> :move'>+<CR>gv=gv
 " nmap <Leader>P "+P
 " vmap <Leader>p "+p
 " vmap <Leader>P "+P
-:
-" delte trailing white spaces
-nnoremap <Leader>rtw :%s/\s\+$//e<CR>
+
+
+" Automatically removing all trailing whitespace
+autocmd BufWritePre * :%s/\s\+$//e
 match Error /\s\+$/
 
 " imap <S-Tab> <C-P>
@@ -146,12 +155,13 @@ inoremap jj <ESC>l
 inoremap оо <ESC>l
 
 nmap <Leader>p :set paste!<CR>
-map <Leader>ra :%s/
+nmap <leader>m :call ToggleMouse()<CR>
 nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
-nmap <leader>b :CtrlPBuffer<cr>
-nmap <silent> <leader>ev :e ~/.vimrc<CR>
-nmap <silent> <leader>sv :so ~/.vimrc<CR>
-nmap <leader>todo :e ~/notes/ops.todo<cr>
+"map <Leader>ra :%s/
+"nmap <leader>b :CtrlPBuffer<cr>
+" nmap <silent> <leader>ev :e ~/.vimrc<CR>
+" nmap <silent> <leader>sv :so ~/.vimrc<CR>
+nmap <leader>todo :vs ~/notes/ops.todo<cr>
 
 :iab <expr> 0--- strftime("# %c")
 
@@ -197,5 +207,14 @@ let g:syntastic_python_checkers = ['pylint']
 let g:islime2_29_mode=1
 
 
-
+function! ToggleMouse()
+    " check if mouse is enabled
+    if &mouse == 'a'
+        " disable mouse
+        set mouse=
+    else
+        " enable mouse everywhere
+        set mouse=a
+    endif
+endfunc
 
