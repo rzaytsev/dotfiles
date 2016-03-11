@@ -43,12 +43,12 @@ let g:airline_powerline_fonts = 1
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'bling/vim-airline'
 Plugin 'kana/vim-fakeclip'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-commentary'
 Plugin 'scrooloose/nerdtree.git'
-Plugin 'terryma/vim-multiple-cursors'
 Plugin 'elentok/plaintasks.vim'
 Plugin 'wincent/command-t'
 Plugin 'tpope/vim-rsi'
@@ -61,6 +61,9 @@ Plugin 'tpope/vim-markdown'
 Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'Raimondi/delimitMate'
 Plugin 'matschaffer/vim-islime2'
+Plugin 'tpope/vim-fireplace.git'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'airblade/vim-gitgutter'
 
 filetype plugin indent on      " use the file type plugins
 
@@ -86,8 +89,10 @@ augroup END
 let mapleader="\<Space>"
 
 nnoremap <Leader>o :CtrlP<CR>
+nnoremap <Leader>q :q<CR>
 nnoremap <Leader>w :w<CR>
-nmap <Leader><Leader> V
+
+noremap % v%
 
 " Explore mode
 let g:netrw_liststyle=3
@@ -95,11 +100,11 @@ nmap <leader>e :NERDTreeToggle<CR>
 nmap <silent> // :nohlsearch<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 
-nmap <S-Enter> O<Esc>
-nmap <CR> o<Esc>
+" nmap <S-Enter> O<Esc>
+" nmap <CR> o<Esc>
 
-nmap <Leader>d diw
-nmap <Leader>c ciw
+nmap <Leader>d "_diw
+nmap <Leader>c "_ciw
 
 " map <up> <nop>
 " map <down> <nop>
@@ -123,6 +128,10 @@ inoremap <C-a> <C-o>0
 cnoremap <C-a>  <Home>
 cnoremap <C-e>  <End>
 
+" Rebind Ctrl-C in insert mode to not only leave insert mode without firing
+" InsertLeave events, but also to actually undo the current insert operation
+inoremap <C-c> <C-c>u
+
 cmap w!! w !sudo tee % >/dev/null
 command R !./%
 
@@ -138,12 +147,15 @@ xnoremap <silent> <S-DOWN> :move'>+<CR>gv=gv
 " vmap <Leader>p "+p
 " vmap <Leader>P "+P
 
+"spellcheck
+set spelllang=en_us,ru_ru
+nmap <silent> <leader>d :set spell!<CR>
 
 " Automatically removing all trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
 match Error /\s\+$/
 
-" imap <S-Tab> <C-P>
+imap <S-Tab> <C-P>
 nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
 nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
 nnoremap <C-Tab> :bnext<CR>
