@@ -15,7 +15,7 @@ nnoremap <buffer> - :call ArchiveTasks()<cr>
 abbr -- <c-r>=Separator()<cr>
 
 " when pressing enter within a task it creates another task
-setlocal comments+=n:☐
+setlocal comments+=n:-
 
 function! ToggleComplete()
   let line = getline('.')
@@ -46,9 +46,9 @@ endfunc
 function! NewTask()
   let line=getline('.')
   if line =~ "^ *$"
-    normal A- 
+    normal A-
   else
-    normal I- 
+    normal I-
   end
 endfunc
 
@@ -60,7 +60,7 @@ function! ArchiveTasks()
         call cursor(line('$'), 1)
         normal 2o
         normal iArchive:
-        normal o＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+        normal o--------------------------------------------
         let archive_start = line('$') - 1
     endif
     call cursor(1,1)
@@ -91,7 +91,7 @@ endfunc
 function! Separator()
     let line = getline('.')
     if line =~ "^-*$"
-      return "___________________________________________________________________"
+      return "--- ✄ -----------------------"
     else
       return "--"
     end

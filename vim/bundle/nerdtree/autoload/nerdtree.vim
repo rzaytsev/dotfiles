@@ -4,17 +4,17 @@ endif
 let g:loaded_nerdtree_autoload = 1
 
 function! nerdtree#version()
-    return '4.2.0'
+    return '5.0.0'
 endfunction
 
 " SECTION: General Functions {{{1
 "============================================================
 
 "FUNCTION: nerdtree#checkForBrowse(dir) {{{2
-"inits a secondary nerd tree in the current buffer if appropriate
+"inits a window tree in the current buffer if appropriate
 function! nerdtree#checkForBrowse(dir)
     if a:dir != '' && isdirectory(a:dir)
-        call g:NERDTreeCreator.CreateSecondary(a:dir)
+        call g:NERDTreeCreator.CreateWindowTree(a:dir)
     endif
 endfunction
 
@@ -32,6 +32,17 @@ endfunction
 "FUNCTION: nerdtree#compareNodes(dir) {{{2
 function! nerdtree#compareNodes(n1, n2)
     return a:n1.path.compareTo(a:n2.path)
+endfunction
+
+"FUNCTION: nerdtree#compareNodesBySortKey(n1, n2) {{{2
+function! nerdtree#compareNodesBySortKey(n1, n2)
+    if a:n1.path.getSortKey() <# a:n2.path.getSortKey()
+        return -1
+    elseif a:n1.path.getSortKey() ># a:n2.path.getSortKey()
+        return 1
+    else
+        return 0
+    endif
 endfunction
 
 " FUNCTION: nerdtree#deprecated(func, [msg]) {{{2
@@ -83,7 +94,7 @@ endfunction
 
 " FUNCTION: nerdtree#postSourceActions() {{{2
 function! nerdtree#postSourceActions()
-    call g:NERDTreeBookmark.CacheBookmarks(0)
+    call g:NERDTreeBookmark.CacheBookmarks(1)
     call nerdtree#ui_glue#createDefaultBindings()
 
     "load all nerdtree plugins
