@@ -36,7 +36,7 @@ set foldmethod=indent
 set foldlevel=99
 
 set visualbell
-
+set guifont=Knack\ Regular\ Nerd\ Font\ Complete\ Mono
 "set iskeyword-=_
 
 let g:airline_powerline_fonts = 1
@@ -45,12 +45,9 @@ set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'bling/vim-airline'
-Plugin 'kana/vim-fakeclip'
-Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-commentary'
 Plugin 'scrooloose/nerdtree.git'
 Plugin 'elentok/plaintasks.vim'
-Plugin 'wincent/command-t'
 Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
@@ -60,10 +57,15 @@ Plugin 'scrooloose/syntastic.git'
 Plugin 'tpope/vim-markdown'
 Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'Raimondi/delimitMate'
-Plugin 'matschaffer/vim-islime2'
 Plugin 'tpope/vim-fireplace.git'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'airblade/vim-gitgutter'
+Plugin 'ryanoasis/vim-devicons'
+"Plugin 'Shougo/unite.vim'
+"Plugin 'wincent/command-t'
+"Plugin 'matschaffer/vim-islime2'
+"Plugin 'tmhedberg/SimpylFold'
+"Plugin 'airblade/vim-gitgutter'
+"Plugin 'kana/vim-fakeclip'
+"Plugin 'ctrlpvim/ctrlp.vim'
 
 filetype plugin indent on      " use the file type plugins
 
@@ -72,32 +74,36 @@ set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_ " Show “invisible” characters
 
 " When editing a file, always jump to the last cursor position
 autocmd BufReadPost *
-\ if ! exists("g:leave_my_cursor_position_alone") |
-\ if line("'\"") > 0 && line ("'\"") <= line("$") |
-\ exe "normal g'\"" |
-\ endif |
-\ endif
+      \ if ! exists("g:leave_my_cursor_position_alone") |
+      \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+      \ exe "normal g'\"" |
+      \ endif |
+      \ endif
 
 set list
 set listchars=tab:•·,trail:•,extends:>,precedes:<
 
 augroup rainbow_code
-    autocmd!
-    autocmd FileType lisp,clojure,scheme,python,ruby RainbowParentheses
+  autocmd!
+  autocmd FileType lisp,clojure,scheme,python,ruby RainbowParentheses
 augroup END
+
 
 let mapleader="\<Space>"
 
 nnoremap <Leader>o :CtrlP<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>w :w<CR>
+" nnoremap <Leader><Leader> <S-v>
 
 noremap % v%
+
+vnoremap < <gv
+vnoremap > >gv
 
 " Explore mode
 let g:netrw_liststyle=3
 nmap <leader>e :NERDTreeToggle<CR>
-nmap <silent> // :nohlsearch<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 
 " nmap <S-Enter> O<Esc>
@@ -132,7 +138,7 @@ cnoremap <C-e>  <End>
 " InsertLeave events, but also to actually undo the current insert operation
 inoremap <C-c> <C-c>u
 
-cmap w!! w !sudo tee % >/dev/null
+cmap W! w !sudo tee % >/dev/null
 command R !./%
 
 nnoremap <silent> <S-UP>   :move-2<CR>==
@@ -140,12 +146,9 @@ nnoremap <silent> <S-DOWN> :move+<CR>==
 xnoremap <silent> <S-UP>   :move-2<CR>gv=gv
 xnoremap <silent> <S-DOWN> :move'>+<CR>gv=gv
 
-" vmap <Leader>y "+y
-" vmap <Leader>d "+d
-" nmap <Leader>p "+p
-" nmap <Leader>P "+P
-" vmap <Leader>p "+p
-" vmap <Leader>P "+P
+" tab for brackets
+nnoremap <tab> %
+vnoremap <tab> %
 
 "spellcheck
 set spelllang=en_us,ru_ru
@@ -155,7 +158,7 @@ nmap <silent> <leader>d :set spell!<CR>
 autocmd BufWritePre * :%s/\s\+$//e
 match Error /\s\+$/
 
-imap <S-Tab> <C-P>
+"imap <C-Tab> <C-P>
 nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
 nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
 nnoremap <C-Tab> :bnext<CR>
@@ -174,24 +177,17 @@ nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
 " nmap <silent> <leader>ev :e ~/.vimrc<CR>
 " nmap <silent> <leader>sv :so ~/.vimrc<CR>
 nmap <leader>todo :vs ~/notes/ops.todo<cr>
+nnoremap <Leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
+
+nnoremap Y yy
+nmap <leader>v v]
+
+" markdown shortcuts
+"" underlining headings
+map <leader>mh yypVr-
+map <leader>mH yypVr=
 
 :iab <expr> 0--- strftime("# %c")
-
-" CtrlP settings
-let g:ctrlp_match_window = 'bottom,order:ttb'
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-
-" ================ Persistent Undo ==================
-" Keep undo history across sessions, by storing in file.
-" Only works all the time.
-if has('persistent_undo')
-  silent !mkdir ~/.vim/backups > /dev/null 2>&1
-  set undodir=~/.vim/backups
-  set undofile
-endif
-
 
 "syntastic plugin
 :nmap <Leader>s :SyntasticToggleMode<CR>
@@ -205,6 +201,8 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_flake8_args='--ignore=E121,E128,E711,E301,E261,E241,E124,E126,E721
+      \ --max-line-length=100'
 
 " Folds
 " set foldmethod=indent   " Fold based on indent
@@ -218,15 +216,64 @@ let g:syntastic_python_checkers = ['pylint']
 
 let g:islime2_29_mode=1
 
-
 function! ToggleMouse()
-    " check if mouse is enabled
-    if &mouse == 'a'
-        " disable mouse
-        set mouse=
-    else
-        " enable mouse everywhere
-        set mouse=a
-    endif
+  " check if mouse is enabled
+  if &mouse == 'a'
+    " disable mouse
+    set mouse=
+  else
+    " enable mouse everywhere
+    set mouse=a
+  endif
 endfunc
+
+function! ToggleMovement(firstOp, thenOp)
+  let pos = getpos('.')
+  execute "normal! " . a:firstOp
+  if pos == getpos('.')
+    execute "normal! " . a:thenOp
+  endif
+endfunction
+
+nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
+
+
+"Use TAB to complete when typing words, else inserts TABs as usual.
+"Uses dictionary and source files to find matching words to complete.
+
+"See help completion for source,
+"Note: usual completion is on <C-n> but more trouble to press all the time.
+"Never type the same word twice and maybe learn a new spellings!
+"Use the Linux dictionary when spelling is in doubt.
+"Window users can copy the file to their machine.
+function! Tab_Or_Complete()
+  if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
+    return "\<C-N>"
+  else
+    return "\<Tab>"
+  endif
+endfunction
+:inoremap <Tab> <C-R>=Tab_Or_Complete()<CR>
+
+
+:set dictionary="/usr/dict/words
+
+autocmd FileType * setlocal colorcolumn=0
+autocmd FileType ruby,python,javascript,c,cpp,objc,rst let &colorcolumn="120,".join(range(120,999),",")
+
+" python support
+autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
+
+" ruby support
+autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+
+" vim
+autocmd FileType vim setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
+
+" YAML support
+autocmd FileType yaml setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
+autocmd BufNewFile,BufRead *.sls setlocal ft=yaml
+
+" Clojure support
+au Filetype clojure nmap <leader>ck :Require<cr>
 
