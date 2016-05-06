@@ -25,7 +25,8 @@ set smartindent
 set softtabstop=2
 set shiftwidth=4
 set expandtab
-
+set undofile
+set undodir=~/.vim/undodir
 set showmatch
 set encoding=utf-8
 set t_Co=256
