@@ -34,7 +34,7 @@ set hidden
 
 set foldmethod=indent
 set foldlevel=99
-
+set scrolloff=999
 set visualbell
 set guifont=Knack\ Regular\ Nerd\ Font\ Complete\ Mono
 "set iskeyword-=_
@@ -44,7 +44,8 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-commentary'
 Plugin 'scrooloose/nerdtree.git'
 Plugin 'elentok/plaintasks.vim'
@@ -66,6 +67,8 @@ Plugin 'ryanoasis/vim-devicons'
 "Plugin 'airblade/vim-gitgutter'
 "Plugin 'kana/vim-fakeclip'
 "Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'duggiefresh/vim-easydir'
+"Plugin 'itchyny/lightline.vim'
 
 filetype plugin indent on      " use the file type plugins
 
@@ -88,15 +91,12 @@ augroup rainbow_code
   autocmd FileType lisp,clojure,scheme,python,ruby RainbowParentheses
 augroup END
 
-
 let mapleader="\<Space>"
 
 nnoremap <Leader>o :CtrlP<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>w :w<CR>
 " nnoremap <Leader><Leader> <S-v>
-
-noremap % v%
 
 vnoremap < <gv
 vnoremap > >gv
@@ -105,9 +105,6 @@ vnoremap > >gv
 let g:netrw_liststyle=3
 nmap <leader>e :NERDTreeToggle<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
-
-" nmap <S-Enter> O<Esc>
-" nmap <CR> o<Esc>
 
 nmap <Leader>d "_diw
 nmap <Leader>c "_ciw
@@ -172,15 +169,13 @@ inoremap оо <ESC>l
 nmap <Leader>p :set paste!<CR>
 nmap <leader>m :call ToggleMouse()<CR>
 nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
-"map <Leader>ra :%s/
-"nmap <leader>b :CtrlPBuffer<cr>
 " nmap <silent> <leader>ev :e ~/.vimrc<CR>
 " nmap <silent> <leader>sv :so ~/.vimrc<CR>
 nmap <leader>todo :vs ~/notes/ops.todo<cr>
 nnoremap <Leader>r :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
 
 nnoremap Y yy
-nmap <leader>v v]
+map <leader>v {V}
 
 " markdown shortcuts
 "" underlining headings
