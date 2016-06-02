@@ -37,6 +37,8 @@ set foldmethod=indent
 set foldlevel=99
 set scrolloff=999
 set visualbell
+set guifont=Knack\ Regular\ Nerd\ Font\ Complete\ Mono
+"set iskeyword-=_
 
 let g:airline_powerline_fonts = 1
 filetype off
@@ -45,9 +47,50 @@ call vundle#rc()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'tpope/vim-commentary'
+Plugin 'scrooloose/nerdtree.git'
+Plugin 'elentok/plaintasks.vim'
+Plugin 'tpope/vim-rsi'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-sensible'
+Plugin 'scrooloose/syntastic.git'
+Plugin 'tpope/vim-markdown'
 Plugin 'junegunn/rainbow_parentheses.vim'
+Plugin 'Raimondi/delimitMate'
+Plugin 'tpope/vim-fireplace.git'
+Plugin 'ryanoasis/vim-devicons'
+"Plugin 'Shougo/unite.vim'
+"Plugin 'wincent/command-t'
+"Plugin 'matschaffer/vim-islime2'
+"Plugin 'tmhedberg/SimpylFold'
+"Plugin 'airblade/vim-gitgutter'
+"Plugin 'kana/vim-fakeclip'
+"Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'duggiefresh/vim-easydir'
+Plugin 'hashivim/vim-consul.git'
+Plugin 'hashivim/vim-vagrant.git'
+Plugin 'hashivim/vim-terraform.git'
+Plugin 'hashivim/vim-packer.git'
+Plugin 'hashivim/vim-vaultproject.git'
+Plugin 'nelstrom/vim-visual-star-search'
+Plugin 'bogado/file-line'
+Plugin 'ConradIrwin/vim-bracketed-paste'
+Plugin '907th/vim-auto-save'
+Plugin 'terryma/vim-expand-region'
+Plugin 'rizzatti/dash.vim'
+" terraform
+let g:terraform_fmt_on_save = 1
+
+" autoSave
+let g:auto_save = 1
+let g:auto_save_in_insert_mode = 0
+let g:auto_save_silent = 1
+
+" expand-region
+map v <Plug>(expand_region_expand)
+map C-v <Plug>(expand_region_shrink)
 
 filetype plugin indent on      " use the file type plugins
 
@@ -67,14 +110,19 @@ set listchars=tab:•·,trail:•,extends:>,precedes:<
 
 augroup rainbow_code
   autocmd!
-  autocmd FileType bash,lisp,clojure,scheme,python,ruby RainbowParentheses
+  autocmd FileType lisp,clojure,scheme,python,ruby RainbowParentheses
 augroup END
 
 let mapleader="\<Space>"
 
-nnoremap <Leader>o :CtrlP<CR>
+
+" Dash
+:nmap <silent> <leader>d <Plug>DashSearch
+
+
+" nnoremap <Leader>o :CtrlP<CR>
 nnoremap <Leader>q :q<CR>
-nnoremap <Leader>w :w<CR>
+nnoremap <Leader>w :wa<CR>
 " nnoremap <Leader><Leader> <S-v>
 
 vnoremap < <gv
@@ -82,11 +130,10 @@ vnoremap > >gv
 
 " Explore mode
 let g:netrw_liststyle=3
-nmap <leader>e :Explore<CR>
+nmap <leader>e :NERDTreeToggle<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 
-nmap <Leader>d "_diw
-nmap <Leader>c "_ciw
+nmap <Leader>c "_ci"
 
 " map <up> <nop>
 " map <down> <nop>
@@ -128,7 +175,7 @@ vnoremap <tab> %
 
 "spellcheck
 set spelllang=en_us,ru_ru
-nmap <silent> <leader>d :set spell!<CR>
+nmap <silent> <leader>D :set spell!<CR>
 
 " Automatically removing all trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
@@ -168,6 +215,38 @@ map <leader>mH yypVr=
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_flake8_args='--ignore=E121,E128,E711,E301,E261,E241,E124,E126,E721
+      \ --max-line-length=100'
+
+" Folds
+" set foldmethod=indent   " Fold based on indent
+" set foldnestmax=3       " Deepest fold is 3 levels
+" set nofoldenable        " Don't fold by default
+
+" vim-slime settings
+" let g:slime_target = "tmux"
+" let g:slime_python_ipython = 1
+" let g:slime_default_config = {"socket_name": "default", "target_pane": ":"}
+
+let g:islime2_29_mode=1
+
+function! ToggleMouse()
+  " check if mouse is enabled
+  if &mouse == 'a'
+    " disable mouse
+    set mouse=
+  else
+    " enable mouse everywhere
+    set mouse=a
+  endif
+endfunc
 
 function! ToggleMovement(firstOp, thenOp)
   let pos = getpos('.')
