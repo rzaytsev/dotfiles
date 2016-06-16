@@ -1,5 +1,4 @@
 colorscheme Tomorrow-Night-Eighties
-"colorscheme seoul256
 set shortmess=at
 syntax on               " syntax highlighting
 set ai                  " auto indenting
@@ -48,6 +47,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-sensible'
 Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'duggiefresh/vim-easydir'
+Plugin 'ConradIrwin/vim-bracketed-paste'
 
 filetype plugin indent on      " use the file type plugins
 
@@ -85,14 +85,10 @@ let g:netrw_liststyle=3
 nmap <leader>e :Explore<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 
-nmap <Leader>d "_diw
-nmap <Leader>c "_ciw
-
 " map <up> <nop>
 " map <down> <nop>
 " map <left> <nop>
 " map <right> <nop>
-
 
 " Easy window navigation
 map <C-h> <C-w>h
@@ -161,13 +157,9 @@ map <leader>v {V}
 map <leader>mh yypVr-
 map <leader>mH yypVr=
 
+" expand  0--- into date
 :iab <expr> 0--- strftime("# %c")
 
-"syntastic plugin
-:nmap <Leader>s :SyntasticToggleMode<CR>
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
 function! ToggleMovement(firstOp, thenOp)
   let pos = getpos('.')
