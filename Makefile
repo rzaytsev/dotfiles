@@ -1,15 +1,23 @@
-install:
-	ln -s $(HOME)/.dotfiles/vim $(HOME)/.vim
-	ln -s $(HOME)/.dotfiles/vimrc $(HOME)/.vimrc
-	ln -s $(HOME)/.dotfiles/zshrc $(HOME)/.zshrc
-	ln -s $(HOME)/.dotfiles/tmux.conf $(HOME)/.tmux.conf
-	ln -s $(HOME)/.dotfiles/oh-my-zsh $(HOME)/.oh-my-zsh
-	ln -s $(HOME)/.dotfiles/zsh-custom $(HOME)/.zsh-custom
+all:
+	mkdir -p ~/.config/alacritty
+	mkdir -p ~/.emacs.d
+
+	[ -f ~/.zshrc ] || ln -s $(PWD)/zshrc ~/.zshrc
+	[ -f ~/.tmux.conf ] || ln -s $(PWD)/tmux.conf ~/.tmux.conf
+	[ -f ~/.vimrc ] || ln -s $(PWD)/vimrc ~/.vimrc
+	[ -f ~/.config/alacritty/alacritty.yml ] || ln -s $(PWD)/alacritty.yml ~/.config/alacritty/alacritty.yml
+
+	cp -r $(PWD)/vim ~/.vim
+	vim +PlugUpgrade +PlugUpdate
+
+	# don't show last login message
+	touch ~/.hushlogin
 
 clean:
 	rm -rf $(HOME)/.vim
 	rm -f $(HOME)/.vimrc
 	rm -f $(HOME)/.zshrc
 	rm -f $(HOME)/.tmux.conf
-	rm -f $(HOME)/.oh-my-zsh
-	rm -f $(HOME)/.zsh-custom
+	rm -f $(HOME)/.emacs.d
+
+.PHONY: all
