@@ -69,8 +69,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
-Plug 'scrooloose/nerdtree.git'
-Plug 'elentok/plaintasks.vim'
+Plug 'scrooloose/nerdtree'
+" Plug 'elentok/plaintasks.vim'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -91,12 +91,12 @@ Plug 'airblade/vim-gitgutter'
 "Plugin 'kana/vim-fakeclip'
 "Plugin 'ctrlpvim/ctrlp.vim'
 Plug 'duggiefresh/vim-easydir'
-Plug 'hashivim/vim-consul.git'
-Plug 'hashivim/vim-vagrant.git'
-Plug 'hashivim/vim-terraform.git'
+Plug 'hashivim/vim-consul'
+Plug 'hashivim/vim-vagrant'
+Plug 'hashivim/vim-terraform'
 Plug 'juliosueiras/vim-terraform-completion'
-Plug 'hashivim/vim-packer.git'
-Plug 'hashivim/vim-vaultproject.git'
+Plug 'hashivim/vim-packer'
+Plug 'hashivim/vim-vaultproject'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'bogado/file-line'
 Plug 'ConradIrwin/vim-bracketed-paste'
@@ -104,9 +104,9 @@ Plug '907th/vim-auto-save'
 Plug 'terryma/vim-expand-region'
 Plug 'rizzatti/dash.vim'
 Plug 'tpope/vim-dispatch'
-Plug 'fatih/vim-go' "https://github.com/fatih/vim-go-tutorial
+Plug 'fatih/vim-go', { 'tag': '*' } "https://github.com/fatih/vim-go-tutorial
 Plug 'junegunn/fzf.vim' "https://github.com/junegunn/fzf.vim
-Plug 'PProvost/vim-ps1.git'
+Plug 'PProvost/vim-ps1'
 Plug 'lyokha/vim-xkbswitch'
 " Plug 'xavierchow/vim-sequence-diagram'
 Plug 'nelstrom/vim-markdown-folding'
@@ -116,8 +116,8 @@ Plug 'albertorestifo/github.vim'
 " Plug 'bagrat/vim-workspace'
 " Plug 'editorconfig/editorconfig-vim'
 Plug 'simnalamburt/vim-mundo'
-Plug 'Shougo/neocomplete.vim'
-" Plug 'majutsushi/tagbar'
+" Plug 'Shougo/neocomplete.vim'
+Plug 'majutsushi/tagbar'
 Plug 'wikitopian/hardmode'
 Plug 'tpope/vim-ragtag'
 " Plug 'w0rp/ale'
@@ -131,6 +131,12 @@ Plug 'mindriot101/vim-yapf'
 Plug 'arcticicestudio/nord-vim'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
+Plug 'isRuslan/vim-es6'
+Plug 'maralla/completor.vim'
+Plug 'jonhiggs/MacDict.vim'
+Plug 'sunaku/vim-dasht'
+Plug 'davidoc/taskpaper.vim'
+" Plug 'tpope/vim-vinegar'
 
 call plug#end()
 
@@ -140,6 +146,14 @@ filetype plugin indent on      " use the file type plugins
 " Use deoplete.
 " let g:deoplete#enable_at_startup = 1
 
+let g:completor_python_binary = '/usr/local/bin/python3'
+" let g:completor_racer_binary = '/path/to/racer'
+" let g:completor_clang_binary = '/path/to/clang'
+let g:completor_gocode_binary = '/Users/rzaytsev/dev/go/bin/gocode'
+
+"DashT
+nnoremap <Leader>k :Dasht<Space>
+nnoremap <silent> <Leader>K :call Dasht([expand('<cword>'), expand('<cWORD>')])<Return>
 
 "GitGutter
 let g:gitgutter_enabled = 0
@@ -148,9 +162,6 @@ let g:syntastic_error_symbol = '⤫'
 let g:syntastic_style_error_symbol = '?!'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '..'
-
-"Org-mode
-let g:org_heading_shade_leading_stars = 1
 
 "vim-mundo
 nnoremap <F5> :MundoToggle<CR>
@@ -248,21 +259,75 @@ set listchars=tab:•·,trail:•,extends:>,precedes:<
 
 let mapleader="\<Space>"
 
-noremap <leader><leader> @:
+noremap <leader>. @:
 
 " tagbar
-nmap <leader>t :TagbarToggle<CR>
+nmap <leader>1 :TagbarOpenAutoClose<CR>
+let g:tagbar_type_go = {
+	\ 'ctagstype' : 'go',
+	\ 'kinds'     : [
+		\ 'p:package',
+		\ 'i:imports:1',
+		\ 'c:constants',
+		\ 'v:variables',
+		\ 't:types',
+		\ 'n:interfaces',
+		\ 'w:fields',
+		\ 'e:embedded',
+		\ 'm:methods',
+		\ 'r:constructor',
+		\ 'f:functions'
+	\ ],
+	\ 'sro' : '.',
+	\ 'kind2scope' : {
+		\ 't' : 'ctype',
+		\ 'n' : 'ntype'
+	\ },
+	\ 'scope2kind' : {
+		\ 'ctype' : 't',
+		\ 'ntype' : 'n'
+	\ },
+	\ 'ctagsbin'  : 'gotags',
+	\ 'ctagsargs' : '-sort -silent'
+\ }
+
 
 " FZF
 let g:fzf_buffers_jump = 1
 nnoremap <tab> :Buffers<CR>
-" nnoremap <Leader><Leader> :FZF<CR>
-nnoremap <Leader>e :FZF<CR>
 nmap <leader>h :History<CR>
 nmap <leader>H :History!<CR>
 nmap <leader>a :Ag<CR>
 nmap <leader>A :Ag!<CR>
 
+nmap <Leader>l :BLines<CR>
+nmap <Leader>L :Lines<CR>
+nmap <Leader>' :Marks<CR>
+nmap <Leader>t :BTags<CR>
+" nmap <Leader>T :Tags<CR>
+
+nmap <Leader>/ :History/<CR>
+function! ContextualFZF()
+    " Determine if inside a git repo
+    silent exec "!git rev-parse --show-toplevel"
+    redraw!
+
+    if v:shell_error
+        " Search in current directory
+        call fzf#run({
+          \'sink': 'e',
+          \'down': '40%',
+        \})
+    else
+        " Search in entire git repo
+        call fzf#run({
+          \'sink': 'e',
+          \'down': '40%',
+          \'source': 'git ls-tree --full-tree --name-only -r HEAD',
+        \})
+    endif
+endfunction
+nnoremap <Leader>e :call ContextualFZF()<CR>
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -282,8 +347,10 @@ vnoremap > >gv
 " Explore mode
 let g:netrw_liststyle=3
 nmap <leader>N :NERDTreeToggle<CR>
-nmap <leader>n :NERDTreeFocus<CR>
-nmap <silent> <Leader>/ :nohlsearch<CR>
+
+nmap <leader>n :FZF ~/notes/<CR>
+
+nmap <silent> \\ :nohlsearch<CR>
 
 "nmap <Leader>c "_ci"
 
@@ -313,7 +380,7 @@ cnoremap <C-a>  <Home>
 cnoremap <C-e>  <End>
 
 inoremap jj <ESC>l
-" inoremap jk <ESC>l
+inoremap jk <ESC>l
 "inoremap <silent> <Esc> <Esc>l
 " Rebind Ctrl-C in insert mode to not only leave insert mode without firing
 " InsertLeave events, but also to actually undo the current insert operation
@@ -322,6 +389,7 @@ inoremap jj <ESC>l
 cmap W! w !sudo tee % >/dev/null
 command R !./%
 
+ino <C-x> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
 
 vnoremap K :m '<-2<CR>gv=gv
 vnoremap J :m '>+1<CR>gv=gv
@@ -467,8 +535,9 @@ autocmd filetype terraform nmap <leader>f :TerraformFmt<CR>
 au BufNewFile,BufRead *.yml set filetype=yaml
 
 " markdown support
-au FileType markdown set makeprg=hoedown\ %\ >/tmp/%<.html
+au FileType markdown set makeprg=pandoc\ -s\ -c\ gfm.css\ --lua-filter=tl.lua\ -o\ \%\:t.html\ \%\:t;open\ \%:\t.html
 au FileType markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+au FileType markdown nnoremap <leader>R :.w !bash<CR>
 " autocmd Filetype markdown setlocal spell
 
 " python support
@@ -502,14 +571,7 @@ let g:go_addtags_transform = "camelcase"
 " let g:go_highlight_functions = 1
 " let g:go_highlight_methods = 1
 
-if executable('go-langserver')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'go-langserver',
-        \ 'cmd': {server_info->['go-langserver', '-mode', 'stdio']},
-        \ 'whitelist': ['go'],
-        \ })
-endif
-au FileType go set noexpandtab shiftwidth=8 tabstop=8
+au FileType go set noexpandtab shiftwidth=4 tabstop=4
 au FileType go nmap <leader>b  <Plug>(go-build)
 au FileType go nmap <leader>r  <Plug>(go-run)
 au FileType go nmap <Leader>i  <Plug>(go-info)
@@ -518,6 +580,8 @@ au FileType go nmap <Leader>f  :GoFmt<CR>
 au FileType go let g:go_fmt_autosave = 0
 au FileType go set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 au FileType gohtmltmpl set expandtab shiftwidth=2 tabstop=2
+
+au FileType taskpaper set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 
 " au FileType go au BufWritePre <buffer> %!gofmt
 " let g:go_fmt_options = "-tabs=false -tabwidth=4"
@@ -533,6 +597,9 @@ autocmd BufNewFile,BufRead *.sls set ft=yaml
 
 " Clojure support
 au Filetype clojure nmap <leader>ck :Require<cr>
+
+"JS
+augroup filetype javascript syntax=javascript
 
 augroup rainbow_code
   autocmd!
@@ -573,3 +640,31 @@ vnoremap <CR> }
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
+map <F11> "dyiw:call MacDict(@d)<CR>
+
+
+" set foldtext=MyFoldText()
+" function MyFoldText()
+"   let line = getline(v:foldstart)
+"   let sub = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
+"   return v:folddashes . sub
+" endfunction
+
+fu! ToggleCB()
+	let line = getline('.')
+
+	if(match(line, "\\[ \\]") != -1)
+		let line = substitute(line, "\\[ \\]", "[x]", "")
+	elseif(match(line, "\\[x\\]") != -1)
+		let line = substitute(line, "\\[x\\]", "[ ]", "")
+	elseif(match(line, "\\[+\\]") != -1)
+		let line = substitute(line, "\\[+\\]", "[ ]", "")
+	endif
+
+	call setline('.', line)
+endf
+
+command! ToggleCB call ToggleCB()
+
+nmap <silent> <leader>- :ToggleCB<cr>
