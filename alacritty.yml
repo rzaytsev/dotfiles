@@ -41,26 +41,26 @@ draw_bold_text_with_bright_colors: true
 font:
   # The normal (roman) font face to use.
   normal:
-    family: Knack Nerd Font Mono
+    family: Hack Nerd Font Mono
     # Style can be specified to pick a specific face.
     # style: Regular
 
   # The bold font face
   bold:
     # family: SF Mono
-    family: Knack Nerd Font Mono
+    family: Hack Nerd Font Mono
     # Style can be specified to pick a specific face.
     # style: Bold
 
   # The italic font face
   italic:
     # family: SF Mono
-    family: Knack Nerd Font Mono
+    family: Hack Nerd Font Mono
     # Style can be specified to pick a specific face.
-    # style: Italic
+    style: Italic
 
   # Point size of the font
-  size: 16.0
+  size: 15.0
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
@@ -85,7 +85,7 @@ render_timer: false
 
 # Use custom cursor colors. If true, display the cursor in the cursor.foreground
 # and cursor.background colors, otherwise invert the colors of the cursor.
-custom_cursor_colors: false
+custom_cursor_colors: true
 
 # Colors (Tomorrow Night Bright)
 colors:
@@ -101,7 +101,7 @@ colors:
 
   # Normal colors
   normal:
-    black:   '0x000000'
+    black:   '0x3b3b3b'
     red:     '0xd54e53'
     green:   '0xb9ca4a'
     yellow:  '0xe6c547'
@@ -178,7 +178,7 @@ background_opacity: 1.0
 # - PasteSelection
 # - Copy (TODO)
 mouse_bindings:
-  - { mouse: Middle, action: PasteSelection }
+  - { mouse: Right, action: Paste }
 
 mouse:
   # Click settings
@@ -264,7 +264,13 @@ shell:
 #   `command` must be a map containing a `program` string, and `args` array of
 #     strings. For example:
 #     - { ... , command: { program: "alacritty", args: ["-e", "vttest"] } }
+
 key_bindings:
+  # - { key: Space, mods: Command, command: { program: "/usr/local/bin/xkbswitch", args: ["-s", "0"]} }
+  # - { key: Space, mods: Command|Shift, command: { program: "/usr/local/bin/xkbswitch", args: ["-s", "2"]} }
+
+    # command: { program: "/bin/bash", args: ["/Users/rzaytsev/dev/alacritty/langSwitch"] }}
+  - { key: N, mods: Command, command: { program: "open", args: ["-n", "/Applications/Alacritty.app"] } }
   - { key: D,        mods: Command,       chars: "\x06\x76" }
   - { key: D,        mods: Command|Shift, chars: "\x06\x73" }
   - { key: W,        mods: Command,       chars: "\x06\x78" }
@@ -312,7 +318,11 @@ key_bindings:
   - { key: Delete,                  chars: "\x1b[3~"                     }
   - { key: Left,     mods: Shift,   chars: "\x1b[1;2D"                   }
   - { key: Left,     mods: Control, chars: "\x1b[1;5D"                   }
-  # - { key: Left,     mods: Alt,     chars: "\x1b[1;3D"                   }
+  #
+  - { key: Left,     mods: Control|Shift, chars: "\x1b[1;6D"             }
+  - { key: Right,    mods: Control|Shift, chars: "\x1b[1;6C"             }
+
+# - { key: Left,     mods: Alt,     chars: "\x1b[1;3D"                   }
   - { key: Left,     mods: Alt,     chars: "\x1b\x62"                   }
   - { key: Left,                    chars: "\x1b[D",   mode: ~AppCursor  }
   - { key: Left,                    chars: "\x1bOD",   mode: AppCursor   }
@@ -398,8 +408,9 @@ key_bindings:
   - { key: W,        mods: Command,       chars: "\x06\x78" }
   - { key: H,        mods: Command,       chars: "\x06\x68" }
   - { key: J,        mods: Command,       chars: "\x06\x6a" }
+  - { key: K,        mods: Command,       chars: "\x06\x6b" }
 # clear screen - for Cmd+K send Ctrl+L
-  - { key: K,        mods: Command,       chars: "\x0c\x0a" }
+  # - { key: K,        mods: Command,       chars: "\x0c\x0a" }
   - { key: L,        mods: Command,       chars: "\x06\x6c" }
   - { key: T,        mods: Command,       chars: "\x06\x63" }
   - { key: Key1,     mods: Command,       chars: "\x06\x31" }

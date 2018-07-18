@@ -362,9 +362,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  '(org-modules
    (quote
     (org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-w3m org-bullets org-checklist org-choose org-drill)))
+ '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
+ '(org-trello-files (quote ("~/org/personal.org")) nil (org-trello))
  '(package-selected-packages
    (quote
-    (fuzzy-format flymake-go org-drill smooth-scrolling neotree all-the-icons-dired git-gutter-fringe helm-ag super-save gorepl-mode sublimity-map sublimity-scroll sublimity fiplr mode-icons evil-surround eruby-mode quickrun go-autocomplete go-eldoc go-eldoc-setup powershell fzf go-mode-autoloads go-mode color-theme-sanityinc-tomorrow smartparens org-journal sr-speedbar forecast multiple-cursors company yasnippet expand-region org-jira yaml-mode projectile helm xclip evil-matchit exec-path-from-shell rainbow-delimiters flycheck spaceline centered-cursor-mode auto-complete dash-at-point org-bullets evil-visualstar markdown-mode evil)))
+    (web-mode dockerfile-mode helm-swoop guide-key org-trello helm-projectile magit fuzzy-format flymake-go org-drill smooth-scrolling neotree all-the-icons-dired git-gutter-fringe helm-ag super-save gorepl-mode sublimity-map sublimity-scroll sublimity fiplr mode-icons evil-surround eruby-mode quickrun go-autocomplete go-eldoc go-eldoc-setup powershell fzf go-mode-autoloads go-mode color-theme-sanityinc-tomorrow smartparens org-journal sr-speedbar forecast multiple-cursors company yasnippet expand-region org-jira yaml-mode projectile helm xclip evil-matchit exec-path-from-shell rainbow-delimiters flycheck spaceline centered-cursor-mode auto-complete dash-at-point org-bullets evil-visualstar markdown-mode evil)))
  '(show-paren-delay 0.0)
  '(spaceline-all-the-icons-clock-always-visible nil)
  '(spaceline-all-the-icons-primary-separator "|")

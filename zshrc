@@ -27,6 +27,12 @@ unsetopt no_match
 ZSH_THEME="robbyrussell"
 DISABLE_AUTO_UPDATE=true
 
+
+#FZF
+FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+alias fzt="fzf-tmux"
+FZF_COMPLETION_TRIGGER="@"
+
 alias hist='history | grep'
 alias lst='tree -L 2 $1'
 alias get-vundle='git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle'
@@ -47,8 +53,12 @@ alias scheme='rlwrap -D 2 -m " \ " /usr/local/bin/scheme'
 alias racket='rlwrap -D 2 -m " \ " /usr/local/bin/racket'
 alias search='mdfind -onlyin .'
 alias filemerge="open /Applications/Xcode.app/Contents/Applications/FileMerge.app/"
+alias get_ssh_keys='for k in $(echo id_rsa personal_rsa bitbucket github devops_vpc_infra.pem); do ssh-add -K /Users/rzaytsev/.ssh/$k; done'
 
 alias -s go="go run"
+alias -s py="python3"
+
+
 
 alias note='vim ~/notes/$(date +%Y-%m-%d).md -c "execute \"normal! Go$(date +%T)\<CR>========\<CR>\" | w! | startinsert"'
 alias dbox='docker exec -t -i dropbox dropbox'
@@ -83,9 +93,23 @@ alias torrent-move="find ~/Downloads -type f -name '*.torrent' -exec mv {} ~/Dro
 
 alias todo="vim ~/work/todo.md"
 
+alias gs="tig status"
+
+func today() {
+/usr/local/bin/icalBuddy -n -npn -nc -iep "title,datetime" -ps "|=|" -po "datetime,title" -tf "=%H.%M" -df "" -eed eventsToday+ | awk -F "=" '{print substr($2,0,5)" : "$3}'
+}
+func next() {
+/usr/local/bin/icalBuddy -n -npn -nc -iep "title,datetime" -ps "|=|" -po "datetime,title" \
+  -tf "=%H.%M" -df "" -eed eventsToday+ | head -n 1 | awk -F "=" '{print substr($2,0,5)" : "$3}'
+}
 
 function tz(){
 for location in $(cat ~/.tz_locations); do printf $fg[green]; printf $location$fg[blue] | awk -F  "/" '{printf $2 ": " }' | tr '_' ' '; TZ="$location" date; done
+}
+
+
+func nnn(){
+    vim $(fzf --preview="cat {}" --preview-window=right:70%:wrap)
 }
 
 finction top_cmd(){
@@ -151,7 +175,7 @@ export CHEF_HOME=/opt/chefdk/bin/
 
 # User configuration
 export LS_COLORS="di=34;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=34;46:cd=34;43:su=0;41:sg=0;46:tw=0;42:ow=0;43:"
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin/:$EC2_HOME/bin:/usr/local/packer:$CHEF_HOME:$GOROOT/bin:$GOPATH/bin:/usr/local/Cellar/python3/3.5.2/Frameworks/Python.framework/Versions/3.5/bin:/Users/rzaytsev/.chefdk/gem/ruby/2.3.0/bin:$HOME/.cargo/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin/:$EC2_HOME/bin:/usr/local/packer:$CHEF_HOME:$GOROOT/bin:$GOPATH/bin:/Users/rzaytsev/.chefdk/gem/ruby/2.3.0/bin:$HOME/.cargo/bin:/Users/rzaytsev/Library/Python/3.7/bin/"
 
 export PATH="$PATH:/usr/local/opt/coreutils/bin"
 export PATH="$PATH:$GOPATH/bin/"
@@ -214,7 +238,6 @@ compdef sshs=ssh
 # function histgrep {
 #   cat ~/.full_history | grep "$@" | tail
 # }
-
 
 alias pwgen='pwgen -N 1 -B'
 
@@ -339,7 +362,14 @@ source ~/.align_aliases
 #   PROMPT="🔪 $WHICH_KNIFE|"$PROMPT
 # fi
 
-alias l="pwd; echo '..'; ls -F | sort | cat"
+# alias l="pwd; echo '..'; ls -F | sort | cat"
 
 alias getcm="curl -s 'http://whatthecommit.com/index.txt'"
 
+alias ll="exa -l --git"
+alias la="exa -la --git"
+alias l="exa -1"
+
+
+# added by Pew
+source $(pew shell_config)

@@ -18,7 +18,7 @@ set incsearch " Highlight dynamically as pattern is typed
 set laststatus=2 " Always show status line
 set showmode " Show the current mode
 set ruler " Show the cursor position
-set title " Show the filename in the window titlebar
+set title titlestring=" Show the filename in the window titlebar
 set showcmd " Show the (partial) command as it’s being typed
 " indent
 set smartindent
@@ -47,8 +47,8 @@ set re=1
 set wildcharm=<C-Z>
 " nnoremap <tab> :b <C-Z>
 
-" nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
-" nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
+nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
+nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
 
 set rtp+=/usr/local/opt/fzf
 
@@ -104,7 +104,7 @@ Plug '907th/vim-auto-save'
 Plug 'terryma/vim-expand-region'
 Plug 'rizzatti/dash.vim'
 Plug 'tpope/vim-dispatch'
-Plug 'fatih/vim-go', { 'tag': '*' } "https://github.com/fatih/vim-go-tutorial
+Plug 'fatih/vim-go', "{ 'tag': '*' } https://github.com/fatih/vim-go-tutorial
 Plug 'junegunn/fzf.vim' "https://github.com/junegunn/fzf.vim
 Plug 'PProvost/vim-ps1'
 Plug 'lyokha/vim-xkbswitch'
@@ -137,14 +137,36 @@ Plug 'jonhiggs/MacDict.vim'
 Plug 'sunaku/vim-dasht'
 Plug 'davidoc/taskpaper.vim'
 " Plug 'tpope/vim-vinegar'
+" Plug 'nvie/vim-flake8'
+Plug 'google/vim-maktaba'
+" Plug 'google/vim-codefmt'
+" Also add Glaive, which is used to configure codefmt's maktaba flags. See
+" `:help :Glaive` for usage.
+Plug 'google/vim-glaive'
+Plug 'junegunn/gv.vim'
+Plug 'mogelbrod/vim-jsonpath'
+
 
 call plug#end()
 
+" call glaive#Install()
+" Optional: Enable codefmt's default mappings on the <Leader>= prefix.
+" Glaive codefmt plugin[mappings]
 filetype off
 filetype plugin indent on      " use the file type plugins
 
 " Use deoplete.
 " let g:deoplete#enable_at_startup = 1
+
+" augroup autoformat_settings
+"   autocmd FileType bzl AutoFormatBuffer buildifier
+"   autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+"   autocmd FileType go AutoFormatBuffer gofmt
+"   autocmd FileType html,css,json AutoFormatBuffer js-beautify
+"   autocmd FileType python AutoFormatBuffer yapf
+"   " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+" augroup END
+
 
 let g:completor_python_binary = '/usr/local/bin/python3'
 " let g:completor_racer_binary = '/path/to/racer'
@@ -158,10 +180,6 @@ nnoremap <silent> <Leader>K :call Dasht([expand('<cword>'), expand('<cWORD>')])<
 "GitGutter
 let g:gitgutter_enabled = 0
 
-let g:syntastic_error_symbol = '⤫'
-let g:syntastic_style_error_symbol = '?!'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_style_warning_symbol = '..'
 
 "vim-mundo
 nnoremap <F5> :MundoToggle<CR>
@@ -262,7 +280,8 @@ let mapleader="\<Space>"
 noremap <leader>. @:
 
 " tagbar
-nmap <leader>1 :TagbarOpenAutoClose<CR>
+nmap <leader>T :TagbarToggle<CR>
+nmap <leader>t :TagbarOpenAutoClose<CR>
 let g:tagbar_type_go = {
 	\ 'ctagstype' : 'go',
 	\ 'kinds'     : [
@@ -294,7 +313,7 @@ let g:tagbar_type_go = {
 
 " FZF
 let g:fzf_buffers_jump = 1
-nnoremap <tab> :Buffers<CR>
+nnoremap <leader>b :Buffers<CR>
 nmap <leader>h :History<CR>
 nmap <leader>H :History!<CR>
 nmap <leader>a :Ag<CR>
@@ -303,10 +322,11 @@ nmap <leader>A :Ag!<CR>
 nmap <Leader>l :BLines<CR>
 nmap <Leader>L :Lines<CR>
 nmap <Leader>' :Marks<CR>
-nmap <Leader>t :BTags<CR>
+" nmap <Leader>t :BTags<CR>
 " nmap <Leader>T :Tags<CR>
 
-nmap <Leader>/ :History/<CR>
+nmap <Leader>/ :Lines<CR>
+
 function! ContextualFZF()
     " Determine if inside a git repo
     silent exec "!git rev-parse --show-toplevel"
@@ -323,11 +343,19 @@ function! ContextualFZF()
         call fzf#run({
           \'sink': 'e',
           \'down': '40%',
+          \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
           \'source': 'git ls-tree --full-tree --name-only -r HEAD',
         \})
     endif
 endfunction
 nnoremap <Leader>e :call ContextualFZF()<CR>
+
+command! -bang -nargs=? -complete=dir FFiles
+    \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
+
+
+command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -338,7 +366,6 @@ nmap <Leader>z za
 " shortcut for Dash plugin (documentation)
 :nmap <silent> <leader>d <Plug>DashSearch
 
-" nnoremap <Leader>o :CtrlP<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>w :wa<CR>
 vnoremap < <gv
@@ -457,17 +484,25 @@ set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
+let g:syntastic_check_on_wq = 1
+let g:syntastic_mode_map = { 'mode': 'passive' }
 let g:syntastic_error_symbol = '⤫'
 let g:syntastic_style_error_symbol = '?!'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '..'
 
-let g:syntastic_python_checkers = ['pylint']
-let g:syntastic_python_flake8_args='--ignore=E121,E128,E711,E301,E261,E241,E124,E126,E721
-      \ --max-line-length=100'
+let g:syntastic_python_checkers=['pylint', 'flake8']
+let g:syntastic_python_pylint_exec = 'python3 -m pylint'
+let g:syntastic_python_flake8_exec = 'python3 -m flake8'
+" --ignore=E121,E128,E711,E301,E261,E241,E124,E126,E721 --max-line-length=100
 "let g:syntastic_yaml_ansible_checkers = ['ansible-lint']
+
+
+let g:godef_split = 0
+let g:go_fmt_fail_silently = 1
+let g:go_list_type = 'quickfix'
+let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter', 'gofmt']
+let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
 
 hi SpellBad ctermfg=160
 hi SpellCap ctermfg=226
@@ -535,7 +570,7 @@ autocmd filetype terraform nmap <leader>f :TerraformFmt<CR>
 au BufNewFile,BufRead *.yml set filetype=yaml
 
 " markdown support
-au FileType markdown set makeprg=pandoc\ -s\ -c\ gfm.css\ --lua-filter=tl.lua\ -o\ \%\:t.html\ \%\:t;open\ \%:\t.html
+au FileType markdown set makeprg=pandoc\ -s\ -c\ gfm.css\ --lua-filter=$HOME/.dotfiles/tl.lua\ -o\ \%\:t.html\ \%\:t;open\ \%:\t.html
 au FileType markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 au FileType markdown nnoremap <leader>R :.w !bash<CR>
 " autocmd Filetype markdown setlocal spell
@@ -546,6 +581,17 @@ au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
 au FileType python set makeprg=python\ %
 au FileType python nmap <Leader>f  :Yapf<CR>
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+
+function SetPython2()
+    let g:syntastic_python_flake8_exec = 'python2'
+    let g:syntastic_python_flake8_args = ['-m', 'flake8']
+endfunction
+function SetPython3()
+    let g:syntastic_python_flake8_exec = 'python3'
+    let g:syntastic_python_flake8_args = ['-m', 'flake8']
+endfunction
+call SetPython2()
+
 
 " C support
 autocmd FileType c set expandtab shiftwidth=4 tabstop=8
@@ -577,11 +623,16 @@ au FileType go nmap <leader>r  <Plug>(go-run)
 au FileType go nmap <Leader>i  <Plug>(go-info)
 au FileType go nmap <Leader>d  :GoDecls<CR>
 au FileType go nmap <Leader>f  :GoFmt<CR>
+au FileType go nmap <Leader>]  <Plug>(go-iferr)
+
 au FileType go let g:go_fmt_autosave = 0
 au FileType go set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 au FileType gohtmltmpl set expandtab shiftwidth=2 tabstop=2
 
 au FileType taskpaper set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
+
+au FileType json noremap <buffer> <silent> <expr> <leader>p jsonpath#echo()
+au FileType json noremap <buffer> <silent> <expr> <leader>g jsonpath#goto()
 
 " au FileType go au BufWritePre <buffer> %!gofmt
 " let g:go_fmt_options = "-tabs=false -tabwidth=4"
@@ -619,8 +670,6 @@ autocmd Filetype gitcommit setlocal spell
 " autocmd! BufRead * if exists('syntax_on') && exists('b:current_syntax') && ! empty(&l:filetype) && index(split(&eventignore, ','), 'Syntax') != -1 | unlet! b:current_syntax | endif
 " augroup END
 
-command! -bang -nargs=? -complete=dir FFiles
-    \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
 
 if v:version > 703 || v:version == 703 && has('patch541')
   set formatoptions+=j
@@ -664,7 +713,5 @@ fu! ToggleCB()
 
 	call setline('.', line)
 endf
-
 command! ToggleCB call ToggleCB()
-
 nmap <silent> <leader>- :ToggleCB<cr>
