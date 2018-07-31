@@ -116,7 +116,7 @@ Plug 'albertorestifo/github.vim'
 " Plug 'bagrat/vim-workspace'
 " Plug 'editorconfig/editorconfig-vim'
 Plug 'simnalamburt/vim-mundo'
-" Plug 'Shougo/neocomplete.vim'
+" Plug 'Shougo/neocomplete.vim '
 Plug 'majutsushi/tagbar'
 Plug 'wikitopian/hardmode'
 Plug 'tpope/vim-ragtag'
@@ -146,6 +146,10 @@ Plug 'google/vim-glaive'
 Plug 'junegunn/gv.vim'
 Plug 'mogelbrod/vim-jsonpath'
 
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+" let g:deoplete#enable_at_startup = 1
 
 call plug#end()
 
@@ -366,16 +370,21 @@ nmap <Leader>z za
 " shortcut for Dash plugin (documentation)
 :nmap <silent> <leader>d <Plug>DashSearch
 
-nnoremap <Leader>q :q<CR>
-nnoremap <Leader>w :wa<CR>
 vnoremap < <gv
 vnoremap > >gv
+map q: :q
 
 " Explore mode
 let g:netrw_liststyle=3
-nmap <leader>N :NERDTreeToggle<CR>
 
-nmap <leader>n :FZF ~/notes/<CR>
+" ==================== NerdTree ====================
+" For toggling
+noremap <Leader>n :NERDTreeToggle<cr>
+noremap <Leader>F :NERDTreeFind<cr>
+
+let NERDTreeShowHidden=1
+
+nmap <leader>w :FZF ~/notes/<CR>
 
 nmap <silent> \\ :nohlsearch<CR>
 
@@ -438,7 +447,7 @@ hi clear SpellBad
 hi SpellBad cterm=underline
 nmap <silent> <leader>D :set spell!<CR>
 
-" Automatically removing all trailing whitespace
+" Automatically removing all trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
 match Error /\s\+$/
 
@@ -486,6 +495,7 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
 let g:syntastic_mode_map = { 'mode': 'passive' }
+" let g:syntastic_mode_map = { 'mode': 'active' }
 let g:syntastic_error_symbol = '⤫'
 let g:syntastic_style_error_symbol = '?!'
 let g:syntastic_warning_symbol = '⚠'
@@ -494,9 +504,7 @@ let g:syntastic_style_warning_symbol = '..'
 let g:syntastic_python_checkers=['pylint', 'flake8']
 let g:syntastic_python_pylint_exec = 'python3 -m pylint'
 let g:syntastic_python_flake8_exec = 'python3 -m flake8'
-" --ignore=E121,E128,E711,E301,E261,E241,E124,E126,E721 --max-line-length=100
-"let g:syntastic_yaml_ansible_checkers = ['ansible-lint']
-
+let g:syntastic_python_flake8_post_args='--ignore=E501,E128,E225,E221'
 
 let g:godef_split = 0
 let g:go_fmt_fail_silently = 1
@@ -555,7 +563,7 @@ endfunction
 set dictionary="/usr/dict/words
 
 " autocmd FileType * set colorcolumn=0
-" autocmd FileType ruby,python,javascript,c,cpp,objc,rst let &colorcolumn="120,".join(range(120,999),",")
+"python3 -m pylint autocmd FileType ruby,python,javascript,c,cpp,objc,rst let &colorcolumn="120,".join(range(120,999),",")
 
 " " Hard mode on!
 " autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
@@ -581,6 +589,7 @@ au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
 au FileType python set makeprg=python\ %
 au FileType python nmap <Leader>f  :Yapf<CR>
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+au FileType python let g:syntastic_mode_map = { 'mode': 'active' }
 
 function SetPython2()
     let g:syntastic_python_flake8_exec = 'python2'

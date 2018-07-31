@@ -227,7 +227,8 @@ shell:
   program: /usr/local/bin/zsh
   args:
     - --login
-    # - tmux
+    # - -c
+    # - tmux new-session -A -s main
 
 # Key bindings
 #
@@ -269,8 +270,9 @@ key_bindings:
   # - { key: Space, mods: Command, command: { program: "/usr/local/bin/xkbswitch", args: ["-s", "0"]} }
   # - { key: Space, mods: Command|Shift, command: { program: "/usr/local/bin/xkbswitch", args: ["-s", "2"]} }
 
-    # command: { program: "/bin/bash", args: ["/Users/rzaytsev/dev/alacritty/langSwitch"] }}
-  - { key: N, mods: Command, command: { program: "open", args: ["-n", "/Applications/Alacritty.app"] } }
+  # - { key: N, mods: Command, command: { program: "open", args: ["-a", "Safari"] } }
+  # - { key: N, mods: Command, command: { program: "open", args: ["-n", "/Applications/Alacritty.app"] } }
+  # - { key: N, mods: Command, command: { program: "/usr/local/bin/vim", args: ["~/notes/journal.md"] } }
   - { key: D,        mods: Command,       chars: "\x06\x76" }
   - { key: D,        mods: Command|Shift, chars: "\x06\x73" }
   - { key: W,        mods: Command,       chars: "\x06\x78" }
@@ -426,4 +428,3 @@ key_bindings:
   - { key: Down,     mods: Command,       chars: "\x06\x4a" }
   - { key: Up,       mods: Command,       chars: "\x06\x4b" }
 #  - { key: Right,    mods: Command,       chars: "\x06\x4c" }
-

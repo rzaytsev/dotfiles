@@ -116,7 +116,9 @@ finction top_cmd(){
     history | awk '{a[$4]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
 }
 
-source ~/work/helpers.sh
+
+HELPERS_MISA_REGION="eu-central-1"
+source ~/work/helpers/all.sh
 
 man() {
     env \
@@ -158,7 +160,7 @@ HIST_STAMPS="dd.mm.yyyy"
 JIRA_URL="https://jira.aligntech.com"
 JIRA_NAME="rzaytsev"
 
-plugins=(git osx pip fasd bgnotify terraform docker golang kubectl knife )
+plugins=(git osx pip fasd bgnotify terraform docker golang)
 source "$ZSH/oh-my-zsh.sh"
 # vagrant knife colorize
 #
@@ -373,3 +375,33 @@ alias l="exa -1"
 
 # added by Pew
 source $(pew shell_config)
+
+# ### PROCESS
+# # mnemonic: [K]ill [P]rocess
+# # show output of "ps -ef", use [tab] to select one or multiple entries
+# # press [enter] to kill selected processes and go back to the process list.
+# # or press [escape] to go back to the process list. Press [escape] twice to exit completely.
+
+function  kp() {
+    local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process]'" | awk '{print $2}')
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+        kp
+    fi
+}
+
+### PATH
+# mnemonic: [F]ind [P]ath
+# list directories in $PATH, press [enter] on an entry to list the executables inside.
+# press [escape] to go back to directory listing, [escape] twice to exit completely
+function fp() {
+    local loc=$(echo $PATH | sed -e $'s/:/\\\n/g' | eval "fzf ${FZF_DEFAULT_OPTS} --header='[find:path]'")
+    if [[ -d $loc ]]; then
+        echo "$(rg --files $loc | rev | cut -d"/" -f1 | rev)" | eval "fzf ${FZF_DEFAULT_OPTS} --header='[find:exe] => ${loc}' >/dev/null"
+        fp
+    fi
+}
+
+
+

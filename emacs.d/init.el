@@ -1,7 +1,7 @@
 ;;; package --- to rule them all
 
 (setq auto-save-interval 5 auto-save-timeout 1)
-
+(setq evil-want-integration nil)
 ;;(scroll-bar-mode -1)
 
 (set-face-attribute 'default nil
@@ -28,6 +28,7 @@
 ;; fix for iTerm alt-right and alt-left keys
 (define-key input-decode-map "\ef" [M-right])
 (define-key input-decode-map "\eb" [M-left])
+
 
 (eval-when-compile
   (require 'use-package))
@@ -91,7 +92,15 @@
     ;; Persistent undo history (save info to file)
     (setq undo-tree-auto-save-history t
           undo-tree-history-directory-alist `((".*" . "~/.emacs.d/tmp")))
+    :config
     (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
 
 (defun simulate-key-press (key)
   "Pretend that KEY was pressed. KEY must be given in `kbd' notation."
@@ -361,12 +370,12 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  '(line-number-mode nil)
  '(org-modules
    (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-w3m org-bullets org-checklist org-choose org-drill)))
+    (org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-w3m org-bullets)))
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(org-trello-files (quote ("~/org/personal.org")) nil (org-trello))
  '(package-selected-packages
    (quote
-    (web-mode dockerfile-mode helm-swoop guide-key org-trello helm-projectile magit fuzzy-format flymake-go org-drill smooth-scrolling neotree all-the-icons-dired git-gutter-fringe helm-ag super-save gorepl-mode sublimity-map sublimity-scroll sublimity fiplr mode-icons evil-surround eruby-mode quickrun go-autocomplete go-eldoc go-eldoc-setup powershell fzf go-mode-autoloads go-mode color-theme-sanityinc-tomorrow smartparens org-journal sr-speedbar forecast multiple-cursors company yasnippet expand-region org-jira yaml-mode projectile helm xclip evil-matchit exec-path-from-shell rainbow-delimiters flycheck spaceline centered-cursor-mode auto-complete dash-at-point org-bullets evil-visualstar markdown-mode evil)))
+    (evil-collection web-mode dockerfile-mode helm-swoop guide-key org-trello helm-projectile magit fuzzy-format flymake-go smooth-scrolling neotree all-the-icons-dired git-gutter-fringe helm-ag super-save gorepl-mode sublimity-map sublimity-scroll sublimity fiplr mode-icons evil-surround eruby-mode quickrun go-autocomplete go-eldoc go-eldoc-setup powershell fzf go-mode-autoloads go-mode color-theme-sanityinc-tomorrow smartparens org-journal sr-speedbar forecast multiple-cursors company yasnippet expand-region org-jira yaml-mode projectile helm xclip evil-matchit exec-path-from-shell rainbow-delimiters flycheck spaceline centered-cursor-mode auto-complete dash-at-point org-bullets evil-visualstar markdown-mode evil)))
  '(show-paren-delay 0.0)
  '(spaceline-all-the-icons-clock-always-visible nil)
  '(spaceline-all-the-icons-primary-separator "|")
@@ -457,7 +466,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; org-mode settings
 (setq org-startup-indented t)
 (setq org-M-RET-may-split-line nil)
-(setq org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
+(setq org-blank-before-new-entry '( (plain-list-item . nil)))
 (setq org-completion-use-ido t)
 (setq org-list-description-max-indent 5)
 
@@ -728,6 +737,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
          ("C-x c b" . my/helm-do-grep-book-notes)
          ("C-x c SPC" . helm-all-mark-rings)))
 (ido-mode -1) ;; Turn off ido mode in case I enabled it accidentally
+
+;; helm movement fixed
+(define-key helm-map (kbd "C-j") 'helm-next-line)
+(define-key helm-map (kbd "C-k") 'helm-previous-line)
+
 
 (use-package helm-ag)
 
