@@ -42,19 +42,18 @@ font:
   # The normal (roman) font face to use.
   normal:
     family: Hack Nerd Font Mono
+    # family: SFMono Nerd Font
     # Style can be specified to pick a specific face.
-    # style: Regular
+    style: Regular
 
   # The bold font face
   bold:
-    # family: SF Mono
-    family: Hack Nerd Font Mono
+    family: Knack Nerd Font
     # Style can be specified to pick a specific face.
-    # style: Bold
+    style: Bold
 
   # The italic font face
   italic:
-    # family: SF Mono
     family: Hack Nerd Font Mono
     # Style can be specified to pick a specific face.
     style: Italic
@@ -87,6 +86,29 @@ render_timer: false
 # and cursor.background colors, otherwise invert the colors of the cursor.
 custom_cursor_colors: true
 
+# Scrollback
+scrolling:
+  # How many lines of scrollback to keep,
+  # '0' will disable scrolling.
+  history: 10000
+
+  # Number of lines the viewport will move for every line
+  # scrolled when scrollback is enabled (history > 0).
+  multiplier: 3
+
+  # Faux Scrolling
+  #
+  # The `faux_multiplier` setting controls the number
+  # of lines the terminal should scroll when the alternate
+  # screen buffer is active. This is used to allow mouse
+  # scrolling for applications like `man`.
+  #
+  # To disable this completely, set `faux_multiplier` to 0.
+  faux_multiplier: 3
+
+  # Automatically scroll to the bottom when new text is written
+  # to the terminal.
+  auto_scroll: false
 # Colors (Tomorrow Night Bright)
 colors:
   # Default colors
@@ -273,12 +295,18 @@ key_bindings:
   # - { key: N, mods: Command, command: { program: "open", args: ["-a", "Safari"] } }
   # - { key: N, mods: Command, command: { program: "open", args: ["-n", "/Applications/Alacritty.app"] } }
   # - { key: N, mods: Command, command: { program: "/usr/local/bin/vim", args: ["~/notes/journal.md"] } }
+  # - { key: E, mods: Command, command: { program: "/usr/local/bin/vim" } }
   - { key: D,        mods: Command,       chars: "\x06\x76" }
   - { key: D,        mods: Command|Shift, chars: "\x06\x73" }
   - { key: W,        mods: Command,       chars: "\x06\x78" }
 # Move to left pane in tmux
   - { key: Left,     mods: Command|Alt,   chars: "\x06\x68" }
   - { key: LBracket, mods: Command,       chars: "\x06\x68" }
+
+  - { key: Down,        mods: Command,       chars: "\x06\x6a" }
+  - { key: Up,        mods: Command,       chars: "\x06\x6b" }
+
+
 
 # Move to right pane in tmux
   - { key: Right,    mods: Command|Alt,   chars: "\x06\x6c" }
@@ -425,6 +453,13 @@ key_bindings:
   - { key: Key8,     mods: Command,       chars: "\x06\x38" }
   - { key: Key9,     mods: Command,       chars: "\x06\x39" }
 #  - { key: Left,     mods: Command,       chars: "\x06\x48" }
-  - { key: Down,     mods: Command,       chars: "\x06\x4a" }
-  - { key: Up,       mods: Command,       chars: "\x06\x4b" }
+  # - { key: Down,     mods: Command,       chars: "\x06\x4a" }
+  # - { key: Up,       mods: Command,       chars: "\x06\x4b" }
 #  - { key: Right,    mods: Command,       chars: "\x06\x4c" }
+# Scroll
+  - { key: PageUp,   mods: Shift,   action: ScrollPageUp   }
+  - { key: PageDown, mods: Shift,   action: ScrollPageDown }
+  - { key: End,      mods: Shift,   action: ScrollToBottom }
+  - { key: Home,     mods: Shift,   action: ScrollToTop    }
+  - { key: K,        mods: Command, action: ClearHistory   }
+  - { key: K,        mods: Command, chars: "\x0c"          }

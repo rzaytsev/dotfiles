@@ -2,7 +2,7 @@
 
 (setq auto-save-interval 5 auto-save-timeout 1)
 (setq evil-want-integration nil)
-;;(scroll-bar-mode -1)
+(scroll-bar-mode -1)
 
 (set-face-attribute 'default nil
                     :family "Knack NF"
@@ -76,6 +76,17 @@
 ;;   "obt" 'org-babel-tangle)
 
 
+
+(setq org-confirm-babel-evaluate nil)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (shell . t)
+   (python . t)
+   ))
+
+
+
 (global-set-key (kbd "<escape>")      'keyboard-escape-quit)
 
 (use-package evil
@@ -101,6 +112,10 @@
   :config
   (evil-collection-init))
 
+(use-package evil-magit
+  :config
+  (setq evil-magit-state 'normal)
+  (setq evil-magit-use-y-for-yank nil))
 
 (defun simulate-key-press (key)
   "Pretend that KEY was pressed. KEY must be given in `kbd' notation."
@@ -375,7 +390,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
  '(org-trello-files (quote ("~/org/personal.org")) nil (org-trello))
  '(package-selected-packages
    (quote
-    (evil-collection web-mode dockerfile-mode helm-swoop guide-key org-trello helm-projectile magit fuzzy-format flymake-go smooth-scrolling neotree all-the-icons-dired git-gutter-fringe helm-ag super-save gorepl-mode sublimity-map sublimity-scroll sublimity fiplr mode-icons evil-surround eruby-mode quickrun go-autocomplete go-eldoc go-eldoc-setup powershell fzf go-mode-autoloads go-mode color-theme-sanityinc-tomorrow smartparens org-journal sr-speedbar forecast multiple-cursors company yasnippet expand-region org-jira yaml-mode projectile helm xclip evil-matchit exec-path-from-shell rainbow-delimiters flycheck spaceline centered-cursor-mode auto-complete dash-at-point org-bullets evil-visualstar markdown-mode evil)))
+    (evil-magit evil-collection web-mode dockerfile-mode helm-swoop guide-key org-trello helm-projectile magit fuzzy-format flymake-go smooth-scrolling neotree all-the-icons-dired git-gutter-fringe helm-ag super-save gorepl-mode sublimity-map sublimity-scroll sublimity fiplr mode-icons evil-surround eruby-mode quickrun go-autocomplete go-eldoc go-eldoc-setup powershell fzf go-mode-autoloads go-mode color-theme-sanityinc-tomorrow smartparens org-journal sr-speedbar forecast multiple-cursors company yasnippet expand-region org-jira yaml-mode projectile helm xclip evil-matchit exec-path-from-shell rainbow-delimiters flycheck spaceline centered-cursor-mode auto-complete dash-at-point org-bullets evil-visualstar markdown-mode evil)))
  '(show-paren-delay 0.0)
  '(spaceline-all-the-icons-clock-always-visible nil)
  '(spaceline-all-the-icons-primary-separator "|")
@@ -466,7 +481,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; org-mode settings
 (setq org-startup-indented t)
 (setq org-M-RET-may-split-line nil)
-(setq org-blank-before-new-entry '( (plain-list-item . nil)))
+(setq org-blank-before-new-entry '(
+                                   (heading . nil)
+                                    (plain-list-item . nil)))
+(setq org-cycle-separator-lines 1)
 (setq org-completion-use-ido t)
 (setq org-list-description-max-indent 5)
 
@@ -476,7 +494,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                 (lambda () (interactive) (find-file "~/org/personal.org")))
 
 (setq org-todo-keywords
-      '((sequence "TODO" "DOING" "WAITING" "|" "DONE" "CANCELED")))
+      '((sequence "TODO" "DOING" "WAITING" "|" "DONE" "CANCELED")(sequence "IDEA")))
 
 (add-hook 'org-mode-hook
           (lambda ()
@@ -502,16 +520,16 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (setq org-startup-truncated nil)
 
 (setq org-todo-keyword-faces
-      '(("TODO" . (:foreground "red" :weight itallic))
+      '(("TODO" . (:foreground "orange" :weight bold))
         ("DOING" . (:foreground "LightGoldenrod1" :weight bold))
         ("DONE" . (:foreground "green" :weight bold))
         ("CANCELED" . (:foreground "darkgray" :weight bold))
         ("WAITING" . (:foreground "gray" :weight bold))))
 
 (custom-theme-set-faces 'user
-   `(org-level-1 ((t (:foreground "#d689d5" :weight normal))))
+   `(org-level-1 ((t (:foreground "#d689d5" :weight bold))))
    `(org-level-2 ((t (:foreground "#62b0d5" :weight normal))))
-   `(org-level-3 ((t (:foreground "#d0d0ca"))))
+   `(org-level-3 ((t (:foreground "#d0d0ca" :weight bold))))
    `(org-level-4 ((t (:foreground "#d0d0ca"))))
    `(org-level-5 ((t (:foreground "#d0d0ca"))))
    `(org-level-6 ((t (:foreground "#d0d0ca"))))
@@ -536,13 +554,51 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   (setq org-journal-time-format ""))
 
 (setq org-capture-templates
-      '(("n" "Thought or Note"  entry
-         (file org-default-notes-file)
-         "* %?\n\n  %i\n\n  See: %a" :empty-lines 1)
-        ("j" "Journal Note"     entry
-         (file (get-journal-file-today))
-         "* %?\n\n  %i\n\n  From: %a" :empty-lines 1)
-        ))
+        `(("t" "An incoming GTD item." entry
+           (file "gtd/inbox.org")
+           ,(concat "* IDEA %?\n"
+                    ":PROPERTIES:\n"
+                    ":ORDERED:  t\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n")
+           :empty-lines 1)
+
+          ("h" "An incoming personal GTD item." entry
+           (file "personal/inbox.org")
+           ,(concat "* %?\n"
+                    ":PROPERTIES:\n"
+                    ":ORDERED:  t\n"
+                    ":CREATED:  %u\n"
+                    ":END:\n")
+           :empty-lines 1)
+
+        ("r" "A Reminder (tickler)." entry
+         (file "gtd/tickler.org")
+         "* %?\nSCHEDULED: %^t"
+         :empty-lines 1)
+
+        ("l" "A link to read later." entry
+         (file "gtd/reading.org")
+         ,(concat "* TODO %c\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"
+                  "%i")
+         :empty-lines 1)
+
+        ("n" "A note." entry
+         (file "notes.org")
+         ,(concat "* %?\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"))
+
+        ("o" "A personal note." entry
+         (file "personal/notes.org")
+         ,(concat "* %?\n"
+                  ":PROPERTIES:\n"
+                  ":CREATED:  %u\n"
+                  ":END:\n\n"))))
 
 (setq org-ellipsis " ↴ ")
 ;; (setq org-ellipsis " ⚡")

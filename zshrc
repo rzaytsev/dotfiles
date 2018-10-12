@@ -27,9 +27,10 @@ unsetopt no_match
 ZSH_THEME="robbyrussell"
 DISABLE_AUTO_UPDATE=true
 
+COLORTERM="truecolor"
 
 #FZF
-FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --color '
 alias fzt="fzf-tmux"
 FZF_COMPLETION_TRIGGER="@"
 
@@ -58,7 +59,12 @@ alias get_ssh_keys='for k in $(echo id_rsa personal_rsa bitbucket github devops_
 alias -s go="go run"
 alias -s py="python3"
 
+alias j="jira"
+alias jgo="jira go"
 
+alias borda='open https://jira.aligntech.com/secure/RapidBoard.jspa\?rapidView\=770\&projectKey\=RP\&quickFilter\=5159'
+
+alias "rmrf"="trash"
 
 alias note='vim ~/notes/$(date +%Y-%m-%d).md -c "execute \"normal! Go$(date +%T)\<CR>========\<CR>\" | w! | startinsert"'
 alias dbox='docker exec -t -i dropbox dropbox'
@@ -84,8 +90,7 @@ alias gam-insider='export OAUTHFILE=insider-oauth2.txt; gam'
 alias gam-help='open https://github.com/jay0lee/GAM/wiki'
 
 alias skype2="rm -f ~/Library/Application\ Support/Skype/Skype.pid; open -na /Applications/Skype-support.app/"
-alias 'brew-up'='brew update && brew upgrade && brew cleanup -s --force'
-
+alias 'brew-up'='brew update && brew upgrade && brew cleanup -s && rm -rf $(brew --cache)'
 alias weather="curl http://wttr.in/moscow"
 alias moon="curl wttr.in/Moon"
 
@@ -95,20 +100,33 @@ alias todo="vim ~/work/todo.md"
 
 alias gs="tig status"
 
+alias emd="open -a Typora"
+
 func today() {
-/usr/local/bin/icalBuddy -n -npn -nc -iep "title,datetime" -ps "|=|" -po "datetime,title" -tf "=%H.%M" -df "" -eed eventsToday+ | awk -F "=" '{print substr($2,0,5)" : "$3}'
+/usr/local/bin/icalBuddy -n -npn -nc -iep "title,datetime" -ps "|=|" -po "datetime,title" -tf "=%H.%M" -df "" -eed eventsToday+ | awk -F "=" '{print substr($2,0,5)":  "$3}'
 }
 func next() {
 /usr/local/bin/icalBuddy -n -npn -nc -iep "title,datetime" -ps "|=|" -po "datetime,title" \
-  -tf "=%H.%M" -df "" -eed eventsToday+ | head -n 1 | awk -F "=" '{print substr($2,0,5)" : "$3}'
+  -tf "=%H.%M" -df "" -eed eventsToday+ | head -n 1 | awk -F "=" '{print substr($2,0,5)":  "$3}'
 }
+func next_short() {
+/usr/local/bin/icalBuddy -n -npn -nc -iep "title,datetime" -ps "|=|" -po "datetime,title" \
+  -tf "=%H.%M" -df "" -eed eventsToday+ |tr -d . |head -n 1 | awk -F "=" '{print substr($2,0,5)": "substr($3,0,7)}'
+}
+
 
 function tz(){
-for location in $(cat ~/.tz_locations); do printf $fg[green]; printf $location$fg[blue] | awk -F  "/" '{printf $2 ": " }' | tr '_' ' '; TZ="$location" date; done
+for location in $(cat ~/.tz_locations); do
+    title=$(echo $location | awk -F  ":" '{printf $1 }')
+    loc=$(echo $location | awk -F  ":" '{printf $2 }' )
+    datetime=$(TZ="$loc" date "+%H:%M (%Z %z)")
+    printf "$fg[green]$title:\t$fg[blue]$datetime\n";
+done
+printf "\n\n"
 }
 
 
-func nnn(){
+func nn(){
     vim $(fzf --preview="cat {}" --preview-window=right:70%:wrap)
 }
 
@@ -160,7 +178,7 @@ HIST_STAMPS="dd.mm.yyyy"
 JIRA_URL="https://jira.aligntech.com"
 JIRA_NAME="rzaytsev"
 
-plugins=(git osx pip fasd bgnotify terraform docker golang)
+plugins=(git osx pip fasd bgnotify terraform docker golang knife)
 source "$ZSH/oh-my-zsh.sh"
 # vagrant knife colorize
 #
@@ -372,6 +390,9 @@ alias ll="exa -l --git"
 alias la="exa -la --git"
 alias l="exa -1"
 
+alias vv="vim -c 'Files'"
+alias m="mai require"
+alias words="echo $@ >> ~/notes/words.txt"
 
 # added by Pew
 source $(pew shell_config)
@@ -403,5 +424,86 @@ function fp() {
     fi
 }
 
+# export FZF_DEFAULT_OPTS='
+#     --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:109
+#     --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+# '
+
+eval "$(jira --completion-script-bash)"
+
+_fzf_complete_git() {
+    ARGS="$@"
+    local branches
+    branches=$(git branch -vv --all)
+    if [[ $ARGS == 'git co'* ]]; then
+        _fzf_complete "--reverse --multi" "$@" < <(
+            echo $branches
+        )
+    else
+        eval "zle ${fzf_default_completion:-expand-or-complete}"
+    fi
+}
+
+# export FZF_DEFAULT_OPTS='--bind tab:down --cycle'
+
+# export FZF_COMPLETION_TRIGGER=''
+# bindkey '^T' fzf-completion
+# bindkey '^I' $fzf_default_completion
+
+_fzf_complete_git_post() {
+    awk '{print $1}'
+}
+
+_fzf_complete_doge() {
+  _fzf_complete "--multi --reverse" "$@" < <(
+    echo very
+    echo wow
+    echo such
+    echo doge
+    )
+}
+# fgb - checkout git branch (including remote branches), sorted by most recent commit, limit 30 last branches
+fgb() {
+  local branches branch
+  branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
+  branch=$(echo "$branches" |
+           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
 
 
+# fgc - checkout git commit
+fgc() {
+  local commits commit
+  commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+  commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+  git checkout $(echo "$commit" | sed "s/ .*//")
+}
+
+# fgs - git commit browser
+fgs() {
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+
+
+V() {
+  local file
+  file="$(fasd -Rfl "$1" | fzf -1 -0 --no-sort +m)" && vi "${file}" || return 1
+}
+
+alias pp="fzf --preview 'bat --color \"always\" {}'"
+# add support for ctrl+o to open selected file in VS Code
+export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(vim {})+abort'"
+
+alias ppp="fzf --height 40% --preview 'if file -i {}|grep -q binary; then file -b {}; else bat --color \"always\" --line-range :40 {}; fi'"
+
+alias du="ncdu --color dark -rr -x --exclude .git --exclude node_modules"
+
+alias pping=prettyping

@@ -114,8 +114,17 @@ setw -g window-status-activity-attr "none"
 setw -g window-status-activity-fg "colour148"
 setw -g window-status-separator ""
 setw -g window-status-bg "colour236"
+
+# set inactive/active window styles
+# set -g window-style 'fg=colour247,bg=colour236'
+# set -g window-active-style 'fg=colour250,bg=black'
+
+# revert colors back
+# set -g window-style 'fg=default,bg=default'
+# set -g window-active-style 'fg=default,bg=default'
+
 set -g status-left "#{prefix_highlight}#[fg=colour22,bg=colour148,bold] #S #[fg=colour148,bg=colour236,nobold,nounderscore,noitalics]"
-set -g status-right "#[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#[fg=colour250,bg=colour240] %a, %d %h | %H%M | #{keyboard_layout} #[fg=colour252,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour241,bg=colour252]"
+set -g status-right "#[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#[fg=colour250,bg=colour240] %a, %d %h | %H%M | #(cat  ~/.next_event) | #{keyboard_layout} #[fg=colour252,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour241,bg=colour252]"
 # setw -g window-status-format "#[fg=colour245,bg=colour236] #I #[fg=colour245,bg=colour236]#W "
 # setw -g window-status-current-format "#[fg=colour236,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour231,bg=colour240] #I #[fg=colour231,bg=colour240]#W #[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]"
 
@@ -148,8 +157,8 @@ set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 set -g @plugin 'newvar/tmux-keyboard-layout'
-
-
+set -g @plugin 'tmux-plugins/tmux-urlview'
+set -g @plugin 'wfxr/tmux-fzf-url'
 
 ####
 # Smart pane switching with awareness of Nvim/Vim splits.
@@ -203,8 +212,6 @@ set-window-option -g aggressive-resize off
 # example you can send a hex code for the shortcut "c-f v" which in my case
 # opens a vertical pane (see setting above). The hex code for this combination
 # is: 0x06 0x76. There are many cases to find it out. One of them is the tool
-# 'xxd'
-
 # If you run "xxd -psd" and hit "c-f v" and then enter and finally c-c to exit
 # , it outputs the following:
 #
@@ -254,6 +261,8 @@ set-window-option -g aggressive-resize off
 # such as cmd-j, cmd-left, etc.. , select the option "send hex code" and the
 # enter the hex code which I want to be executed, hence the tmux sequence. So
 # when I press CMD + d in iterm, I send the sequence 0x06 0x76,
+# 'xxd'
 # which tmux inteprets it as opening a new pane.
 ###############################################
+
 

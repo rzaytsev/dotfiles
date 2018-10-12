@@ -27,7 +27,10 @@ set shiftwidth=4
 set expandtab
 set undofile
 set undodir=~/.vim/undodir
+set backupdir=~/.vim/.backup/
+set directory=~/.vim/.swp/
 set showmatch
+set autoread
 set encoding=utf-8
 set t_Co=256
 set backspace=indent,eol,start
@@ -47,8 +50,9 @@ set re=1
 set wildcharm=<C-Z>
 " nnoremap <tab> :b <C-Z>
 
-nnoremap <Tab> :bnext<CR>:redraw<CR>:ls<CR>
-nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
+nnoremap <S-Tab> :bnext<CR>:redraw<CR>:ls<CR>
+nnoremap <Tab> :Buffers<CR>
+" nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
 
 set rtp+=/usr/local/opt/fzf
 
@@ -70,15 +74,15 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
 Plug 'scrooloose/nerdtree'
-" Plug 'elentok/plaintasks.vim'
+Plug 'elentok/plaintasks.vim'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
-Plug 'vim-syntastic/syntastic'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
+" Plug 'rhysd/vim-gfm-syntax'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'Raimondi/delimitMate'
 " Plugin 'tpope/vim-fireplace.git'
@@ -145,11 +149,26 @@ Plug 'google/vim-maktaba'
 Plug 'google/vim-glaive'
 Plug 'junegunn/gv.vim'
 Plug 'mogelbrod/vim-jsonpath'
+Plug 'junegunn/vim-easy-align'
+Plug 'benmills/vimux'
+" Plug 'vim-python/python-syntax'
+" Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'w0rp/ale'
+
+Plug 'AaronLasseigne/yank-code'
+
+Plug 'autozimu/LanguageClient-neovim', {
+  \ 'branch': 'next',
+  \ 'do': 'bash install.sh',
+  \ }
+
+" Plug 'vim-syntastic/syntastic'
 
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
 " let g:deoplete#enable_at_startup = 1
+
 
 call plug#end()
 
@@ -158,6 +177,17 @@ call plug#end()
 " Glaive codefmt plugin[mappings]
 filetype off
 filetype plugin indent on      " use the file type plugins
+
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'go': ['go-langserver']
+    \ }
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
 " Use deoplete.
 " let g:deoplete#enable_at_startup = 1
@@ -173,16 +203,41 @@ filetype plugin indent on      " use the file type plugins
 
 
 let g:completor_python_binary = '/usr/local/bin/python3'
-" let g:completor_racer_binary = '/path/to/racer'
-" let g:completor_clang_binary = '/path/to/clang'
 let g:completor_gocode_binary = '/Users/rzaytsev/dev/go/bin/gocode'
 
 "DashT
 nnoremap <Leader>k :Dasht<Space>
 nnoremap <silent> <Leader>K :call Dasht([expand('<cword>'), expand('<cWORD>')])<Return>
 
+
 "GitGutter
 let g:gitgutter_enabled = 0
+
+" vimux
+let g:VimuxOrientation = "v"
+let g:VimuxUseNearest = 1
+
+"ALE
+let g:ale_lint_on_enter = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters = {
+  \ 'python': ['flake8'],
+  \ 'yaml': ['yamllint'],
+  \ 'terraform' : ['tflint'],
+  \ 'go': ['gofmt', 'govet', 'golint']
+  \ }
+
+let g:ale_fixers = {'python': ['black']}
+
+let g:ale_python_flake8_options="--ignore=E501,E128,E225,E221"
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+let g:airline#extensions#ale#enabled = 1
+let g:ale_linters_explicit = 1
+
+nmap <leader>F <Plug>(ale_fix)
 
 
 "vim-mundo
@@ -195,8 +250,6 @@ let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-
-let g:markdown_fenced_languages = ['json', 'ruby', 'sh', 'python', 'yaml']
 
 " terraform format on save: 1 or 0
 let g:terraform_fmt_on_save = 0
@@ -317,42 +370,72 @@ let g:tagbar_type_go = {
 
 " FZF
 let g:fzf_buffers_jump = 1
-nnoremap <leader>b :Buffers<CR>
+let g:fzf_layout = { 'down': '~50%' }
+" nnoremap <leader>b :Buffers<CR>
 nmap <leader>h :History<CR>
 nmap <leader>H :History!<CR>
-nmap <leader>a :Ag<CR>
-nmap <leader>A :Ag!<CR>
+nmap <leader>a :Rg<CR>
+nmap <leader>A :Rg!<CR>
 
-nmap <Leader>l :BLines<CR>
-nmap <Leader>L :Lines<CR>
+nmap <Leader>L :BLines<CR>
 nmap <Leader>' :Marks<CR>
+nmap <Leader>/ :Lines<CR>
 " nmap <Leader>t :BTags<CR>
 " nmap <Leader>T :Tags<CR>
-
-nmap <Leader>/ :Lines<CR>
 
 function! ContextualFZF()
     " Determine if inside a git repo
     silent exec "!git rev-parse --show-toplevel"
     redraw!
 
+    let command = 'fd --type f --hidden --exclude .git .'
+
     if v:shell_error
         " Search in current directory
         call fzf#run({
-          \'sink': 'e',
-          \'down': '40%',
+              \'source': command,
+              \'sink': 'e',
+              \'down': '50%',
         \})
     else
         " Search in entire git repo
         call fzf#run({
-          \'sink': 'e',
-          \'down': '40%',
-          \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
-          \'source': 'git ls-tree --full-tree --name-only -r HEAD',
+              \'source': command,
+              \'sink': 'e',
+              \'down': '50%',
+              \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
         \})
     endif
 endfunction
 nnoremap <Leader>e :call ContextualFZF()<CR>
+
+function! s:append_dir_with_fzf(line)
+  call fzf#run(fzf#wrap({
+    \ 'options': ['--prompt', a:line.'> '],
+    \ 'source': 'find . -type d',
+    \ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+  return ''
+endfunction
+
+cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
+
+command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
+  \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
+  \  'sink': 'cd'}))
+
+
+command! -bang -nargs=? -complete=dir PFiles
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:60%'), <bang>0)
+
+
+let g:pathToTemplates='~/.vim/snippets/'
+function! GoSink(file)
+    execute ':0r '.g:pathToTemplates.a:file
+endfunction
+
+command! Go call fzf#run({
+    \  'source': 'ls '.g:pathToTemplates,
+    \  'sink':    function('GoSink')})
 
 command! -bang -nargs=? -complete=dir FFiles
     \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
@@ -423,17 +506,18 @@ inoremap jk <ESC>l
 " inoremap <C-c> <C-c>u
 
 cmap W! w !sudo tee % >/dev/null
-command R !./%
+command! R !./%
 
 ino <C-x> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
 
 vnoremap K :m '<-2<CR>gv=gv
 vnoremap J :m '>+1<CR>gv=gv
 
-nnoremap <silent> <S-UP>   :move-2<CR>==
-nnoremap <silent> <S-DOWN> :move+<CR>==
-xnoremap <silent> <S-UP>   :move-2<CR>gv=gv
-xnoremap <silent> <S-DOWN> :move'>+<CR>gv=gv
+" shift+move
+" nnoremap <silent> <S-UP>   :move-2<CR>==
+" nnoremap <silent> <S-DOWN> :move+<CR>==
+" xnoremap <silent> <S-UP>   :move-2<CR>gv=gv
+" xnoremap <silent> <S-DOWN> :move'>+<CR>gv=gv
 
 " tab for brackets
 " nnoremap <tab> %
@@ -494,17 +578,22 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
-let g:syntastic_mode_map = { 'mode': 'passive' }
-" let g:syntastic_mode_map = { 'mode': 'active' }
+" let g:syntastic_mode_map = { 'mode': 'passive' }
+let g:syntastic_mode_map = { 'mode': 'active' }
 let g:syntastic_error_symbol = '⤫'
 let g:syntastic_style_error_symbol = '?!'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '..'
 
-let g:syntastic_python_checkers=['pylint', 'flake8']
-let g:syntastic_python_pylint_exec = 'python3 -m pylint'
-let g:syntastic_python_flake8_exec = 'python3 -m flake8'
+" let g:syntastic_python_checkers=['pylint', 'flake8']
+let g:syntastic_python_checkers=['flake8']
+" let g:syntastic_python_pylint_exec = 'python3 -m pylint'
+" let g:syntastic_python_flake8_exec = 'python3 -m flake8'
+let g:syntastic_python_python_exec = '/usr/local/bin/python3'
+let g:syntastic_python_flake8_exec = 'python3'
+let g:syntastic_python_flake8_args = ['-m', 'flake8']
 let g:syntastic_python_flake8_post_args='--ignore=E501,E128,E225,E221'
+let g:syntastic_debug = 1
 
 let g:godef_split = 0
 let g:go_fmt_fail_silently = 1
@@ -572,46 +661,53 @@ set dictionary="/usr/dict/words
 
 au BufNewFile,BufRead *.tf set filetype=terraform
 autocmd FileType terraform let b:dispatch = 'terraform plan'
-autocmd filetype terraform nmap <leader>b :Dispatch<CR>
+autocmd filetype terraform nmap <leader>r :Dispatch<CR>
 autocmd filetype terraform nmap <leader>f :TerraformFmt<CR>
 
 au BufNewFile,BufRead *.yml set filetype=yaml
 
 " markdown support
+" let g:gfm_syntax_enable_always = 1
+" au FileType markdown  setlocal ft=markdown.gfm
 au FileType markdown set makeprg=pandoc\ -s\ -c\ gfm.css\ --lua-filter=$HOME/.dotfiles/tl.lua\ -o\ \%\:t.html\ \%\:t;open\ \%:\t.html
 au FileType markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
-au FileType markdown nnoremap <leader>R :.w !bash<CR>
+au FileType markdown nnoremap <leader>r :.w !bash<CR>
+au FileType markdown vmap <Leader><Bslash> :EasyAlign*<Bar><Enter>
+au FileType markdown nmap <Leader>t :Toch<Enter>
+let g:markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
+let g:vim_markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
+
+
 " autocmd Filetype markdown setlocal spell
+" highlight Tag   ctermfg=green
+" highlight Contact ctermfg=red
+" syntax match Tag  /\s:.\+:\s/
+" syntax match Contact /\s@.\+\s/
+
 
 " python support
 autocmd FileType python set expandtab shiftwidth=4 tabstop=8
 au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
-au FileType python set makeprg=python\ %
-au FileType python nmap <Leader>f  :Yapf<CR>
+au FileType python set makeprg=python3\ %
+au FileType python nmap <Leader>f <Plug>(ale_fix)
+au FileType python nmap <Leader>y :Yapf<CR>
+au FileType python nmap <leader>r :VimuxRunCommand("clear; python3 " . bufname("%"))<CR>
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-au FileType python let g:syntastic_mode_map = { 'mode': 'active' }
+autocmd FileType python xnoremap <leader>p :w !python3<cr>
 
-function SetPython2()
-    let g:syntastic_python_flake8_exec = 'python2'
-    let g:syntastic_python_flake8_args = ['-m', 'flake8']
-endfunction
-function SetPython3()
-    let g:syntastic_python_flake8_exec = 'python3'
-    let g:syntastic_python_flake8_args = ['-m', 'flake8']
-endfunction
-call SetPython2()
-
+" au FileType python let g:syntastic_mode_map = { 'mode': 'active' }
+" au FileType python setlocal equalprg=yapf
 
 " C support
 autocmd FileType c set expandtab shiftwidth=4 tabstop=8
-au FileType c  nnoremap <leader>b :!clear; /usr/local/bin/c %<CR>
+au FileType c  nnoremap <leader>r :!clear; /usr/local/bin/c %<CR>
 
 " ruby support
 au FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
-au FileType ruby nnoremap <leader>b :wa<CR>:!clear; ruby %<CR>
+au FileType ruby nnoremap <leader>r :wa<CR>:!clear; ruby %<CR>
 " autocmd BufNewFile,BufRead *.rb set ft=ruby
 
-
+" go support
 let g:go_fmt_command = "goimports"
 let g:go_info_mode = 'gocode'
 " let g:go_auto_type_info = 1
@@ -638,10 +734,12 @@ au FileType go let g:go_fmt_autosave = 0
 au FileType go set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 au FileType gohtmltmpl set expandtab shiftwidth=2 tabstop=2
 
+
 au FileType taskpaper set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 
 au FileType json noremap <buffer> <silent> <expr> <leader>p jsonpath#echo()
 au FileType json noremap <buffer> <silent> <expr> <leader>g jsonpath#goto()
+au FileType json set expandtab shiftwidth=2 tabstop=8 softtabstop=2
 
 " au FileType go au BufWritePre <buffer> %!gofmt
 " let g:go_fmt_options = "-tabs=false -tabwidth=4"
@@ -661,9 +759,11 @@ au Filetype clojure nmap <leader>ck :Require<cr>
 "JS
 augroup filetype javascript syntax=javascript
 
+" rainbow_parentheses
+let g:rainbow#blacklist = [233, 234, 9 ,160]
 augroup rainbow_code
   autocmd!
-  autocmd FileType lisp,clojure,scheme,python,ruby RainbowParentheses
+  autocmd FileType lisp,clojure,scheme,python,ruby,go,json RainbowParentheses
 augroup END
 
 
@@ -687,17 +787,17 @@ endif
 match ErrorMsg '\%>120v.\+'
 match ErrorMsg '\s\+$'
 
-nnoremap <BS> {
-onoremap <BS> {
-noremap <BS> {
+" nnoremap <BS> {
+" onoremap <BS> {
+" noremap <BS> {
 
-nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-vnoremap <CR> }
+" nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
+" onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
+" vnoremap <CR> }
 
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+" let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+" let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+" let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 map <F11> "dyiw:call MacDict(@d)<CR>
 
@@ -724,3 +824,8 @@ fu! ToggleCB()
 endf
 command! ToggleCB call ToggleCB()
 nmap <silent> <leader>- :ToggleCB<cr>
+
+nnoremap <leader>+ F-a [ ]<ESC>
+
+
+
