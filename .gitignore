@@ -1,3 +1,7 @@
+vim/undodir/*
+vim/view/*
+vim/plugged/*
+
 ### macOS ###
 *.DS_Store
 .AppleDouble

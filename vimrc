@@ -11,6 +11,7 @@ set nocompatible " Make Vim more useful
 set clipboard=unnamed,autoselect " Use the OS clipboard by default (on versions compiled with `+clipboard`)
 set wildmenu " Enhance command-line completion
 set cursorline " Highlight current line
+set cursorlineopt=screenline
 set tabstop=4 " Make tabs as wide as two spaces
 set hlsearch " Highlight searches
 set ignorecase " Ignore case of searches
@@ -29,6 +30,7 @@ set undofile
 set undodir=~/.vim/undodir
 set backupdir=~/.vim/.backup/
 set directory=~/.vim/.swp/
+set noswapfile
 set showmatch
 set autoread
 set encoding=utf-8
@@ -42,10 +44,15 @@ set visualbell
 set ttyfast
 set completeopt-=preview
 
-set re=1
+" set re=1
 
 " nnoremap ; :
 " nnoremap : ;
+
+noremap <Up> <nop>
+noremap <Down> <nop>
+noremap <Left> <nop>
+noremap <Right> <nop>
 
 set wildcharm=<C-Z>
 " nnoremap <tab> :b <C-Z>
@@ -55,6 +62,12 @@ nnoremap <Tab> :Buffers<CR>
 " nnoremap <S-Tab> :bprevious<CR>:redraw<CR>:ls<CR>
 
 set rtp+=/usr/local/opt/fzf
+
+
+" https://github.com/vim/vim/blob/master/runtime/doc/russian.txt
+" Enable hotkeys for Russian layout
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+" setlocal spell spelllang=en_us,ru_ru
 
 "set showbreak=↪
 
@@ -69,12 +82,10 @@ set rtp+=/usr/local/opt/fzf
 
 call plug#begin('~/.vim/plugged')
 
-" Plug 'flazz/vim-colorschemes'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-commentary'
 Plug 'scrooloose/nerdtree'
-Plug 'elentok/plaintasks.vim'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -82,94 +93,52 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sensible'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-" Plug 'rhysd/vim-gfm-syntax'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'Raimondi/delimitMate'
 " Plugin 'tpope/vim-fireplace.git'
 Plug 'ryanoasis/vim-devicons'
-"Plugin 'Shougo/unite.vim'
-"Plugin 'wincent/command-t'
-"Plugin 'matschaffer/vim-islime2'
-"Plugin 'tmhedberg/SimpylFold'
-Plug 'airblade/vim-gitgutter'
-"Plugin 'kana/vim-fakeclip'
-"Plugin 'ctrlpvim/ctrlp.vim'
+" Plug 'airblade/vim-gitgutter'
 Plug 'duggiefresh/vim-easydir'
-Plug 'hashivim/vim-consul'
-Plug 'hashivim/vim-vagrant'
 Plug 'hashivim/vim-terraform'
-Plug 'juliosueiras/vim-terraform-completion'
-Plug 'hashivim/vim-packer'
-Plug 'hashivim/vim-vaultproject'
+" Plug 'juliosueiras/vim-terraform-completion'
+" Plug 'hashivim/vim-consul'
+" Plug 'hashivim/vim-vagrant'
+" Plug 'hashivim/vim-packer'
+" Plug 'hashivim/vim-vaultproject'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'bogado/file-line'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug '907th/vim-auto-save'
 Plug 'terryma/vim-expand-region'
-Plug 'rizzatti/dash.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'fatih/vim-go', "{ 'tag': '*' } https://github.com/fatih/vim-go-tutorial
 Plug 'junegunn/fzf.vim' "https://github.com/junegunn/fzf.vim
-Plug 'PProvost/vim-ps1'
-Plug 'lyokha/vim-xkbswitch'
-" Plug 'xavierchow/vim-sequence-diagram'
+" Plug 'PProvost/vim-ps1'
 Plug 'nelstrom/vim-markdown-folding'
-" Plug 'johngrib/vim-game-code-break'
-" Plug 'jdkanani/vim-material-theme'
 Plug 'albertorestifo/github.vim'
-" Plug 'bagrat/vim-workspace'
-" Plug 'editorconfig/editorconfig-vim'
 Plug 'simnalamburt/vim-mundo'
-" Plug 'Shougo/neocomplete.vim '
 Plug 'majutsushi/tagbar'
-Plug 'wikitopian/hardmode'
+" Plug 'wikitopian/hardmode'
 Plug 'tpope/vim-ragtag'
-" Plug 'w0rp/ale'
-" Plug 'elzr/vim-json'
-" Plug 'michalbachowski/vim-wombat256mod'
 Plug 'mindriot101/vim-yapf'
-" Plug 'Shougo/deoplete.nvim'
-" Plug 'roxma/nvim-yarp'
-" Plug 'roxma/vim-hug-neovim-rpc'
-" Plug 'zchee/deoplete-go', { 'do': 'make'}
-Plug 'arcticicestudio/nord-vim'
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
-Plug 'isRuslan/vim-es6'
+" Plug 'isRuslan/vim-es6'
 Plug 'maralla/completor.vim'
-Plug 'jonhiggs/MacDict.vim'
-Plug 'sunaku/vim-dasht'
-Plug 'davidoc/taskpaper.vim'
-" Plug 'tpope/vim-vinegar'
-" Plug 'nvie/vim-flake8'
-Plug 'google/vim-maktaba'
-" Plug 'google/vim-codefmt'
-" Also add Glaive, which is used to configure codefmt's maktaba flags. See
-" `:help :Glaive` for usage.
-Plug 'google/vim-glaive'
-Plug 'junegunn/gv.vim'
-Plug 'mogelbrod/vim-jsonpath'
+Plug 'masawada/completor-dictionary'
 Plug 'junegunn/vim-easy-align'
 Plug 'benmills/vimux'
-" Plug 'vim-python/python-syntax'
-" Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'w0rp/ale'
-
-Plug 'AaronLasseigne/yank-code'
-
-Plug 'autozimu/LanguageClient-neovim', {
-  \ 'branch': 'next',
-  \ 'do': 'bash install.sh',
-  \ }
-
-" Plug 'vim-syntastic/syntastic'
-
-" Plug 'Shougo/deoplete.nvim'
-" Plug 'roxma/nvim-yarp'
-" Plug 'roxma/vim-hug-neovim-rpc'
-" let g:deoplete#enable_at_startup = 1
-
-
+" Plug 'AaronLasseigne/yank-code'
+Plug 'rhysd/devdocs.vim'
+" Plug 'svermeulen/vim-easyclip'
+Plug 'liuchengxu/vista.vim'
+Plug 'https://github.com/alok/notational-fzf-vim'
+Plug 'mrk21/yaml-vim'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+Plug 'tmhedberg/SimpylFold'
+Plug 'Yggdroot/indentLine'
 call plug#end()
 
 " call glaive#Install()
@@ -179,15 +148,8 @@ filetype off
 filetype plugin indent on      " use the file type plugins
 
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ 'go': ['go-langserver']
-    \ }
-
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nmap K <Plug>(devdocs-under-cursor)
+" let g:devdocs_host = 'localhost:9292'
 
 " Use deoplete.
 " let g:deoplete#enable_at_startup = 1
@@ -201,14 +163,17 @@ nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 "   " Alternative: autocmd FileType python AutoFormatBuffer autopep8
 " augroup END
 
+" let g:indentLine_color_term = 239
+let g:indentLine_enabled = 0
+let g:indentLine_char='┊'
+
+let g:SimpylFold_docstring_preview = 1
+
+"""" notational-fzf-vim
+let g:nv_search_paths = ['~/notes']
 
 let g:completor_python_binary = '/usr/local/bin/python3'
 let g:completor_gocode_binary = '/Users/rzaytsev/dev/go/bin/gocode'
-
-"DashT
-nnoremap <Leader>k :Dasht<Space>
-nnoremap <silent> <Leader>K :call Dasht([expand('<cword>'), expand('<cWORD>')])<Return>
-
 
 "GitGutter
 let g:gitgutter_enabled = 0
@@ -217,19 +182,22 @@ let g:gitgutter_enabled = 0
 let g:VimuxOrientation = "v"
 let g:VimuxUseNearest = 1
 
+
 "ALE
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
   \ 'python': ['flake8'],
   \ 'yaml': ['yamllint'],
-  \ 'terraform' : ['tflint'],
   \ 'go': ['gofmt', 'govet', 'golint']
   \ }
 
-let g:ale_fixers = {'python': ['black']}
+let g:ale_fixers = {
+\   'python': ['black', 'add_blank_lines_for_python_control_statements', 'isort'],
+\    '*': ['prettier', 'remove_trailing_lines', 'trim_whitespace']
+\}
 
-let g:ale_python_flake8_options="--ignore=E501,E128,E225,E221"
+let g:ale_python_flake8_options='--ignore=E501,E128,E225,E221,C0111'
 let g:ale_sign_error = '✖'
 let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
@@ -237,8 +205,33 @@ highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 let g:airline#extensions#ale#enabled = 1
 let g:ale_linters_explicit = 1
 
+let g:ale_yaml_yamllint_options='~/.config/yamllint/config'
+
 nmap <leader>F <Plug>(ale_fix)
 
+
+" quickfix shortcuts
+nmap ]q :cnext<cr>
+nmap ]Q :clast<cr>
+nmap [q :cprev<cr>
+nmap [Q :cfirst<cr>
+
+"vim-lsp
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼', 'icon': '/path/to/some/icon'} " icons require GUI
+let g:lsp_signs_hint = {'text': '*', 'icon': '/path/to/some/other/icon'} " icons require GUI
+
+" if executable('pyls')
+"     " pip install python-language-server
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'pyls',
+"         \ 'cmd': {server_info->['pyls']},
+"         \ 'whitelist': ['python'],
+"         \ 'workspace_config': {'pyls': {'plugins': {'pydocstyle': {'enabled': v:true}}}}
+"         \ })
+" endif
 
 "vim-mundo
 nnoremap <F5> :MundoToggle<CR>
@@ -251,9 +244,6 @@ let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 
 
-" terraform format on save: 1 or 0
-let g:terraform_fmt_on_save = 0
-
 " vim-sequence-diagram: theme set
 "let g:generate_diagram_theme_hand = 1
 
@@ -262,18 +252,18 @@ let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
 let g:auto_save_silent = 1
 
-let g:XkbSwitchEnabled = 1
-let g:XkbSwitchAssistNKeymap = 1    " for commands r and f
-let g:XkbSwitchAssistSKeymap = 1    " for search lines
-" let g:XkbSwitchLib = '/usr/local/bin/libxkbswitch.dylib'
-let g:XkbSwitchLib = '/usr/local/lib/libInputSourceSwitcher.dylib'
+" let g:XkbSwitchEnabled = 1
+" let g:XkbSwitchAssistNKeymap = 1    " for commands r and f
+" let g:XkbSwitchAssistSKeymap = 1    " for search lines
+" " let g:XkbSwitchLib = '/usr/local/bin/libxkbswitch.dylib'
+" let g:XkbSwitchLib = '/usr/local/lib/libInputSourceSwitcher.dylib'
 
 set ttimeoutlen=10
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep = ""
 let g:airline_right_sep = ""
 let g:airline_powerline_fonts = 1
-" let g:airline_theme = 'bubblegum2'
+let g:airline_theme = 'bubblegum2'
 let g:airline_skip_empty_sections = 1
 let g:airline#extensions#xkblayout#enabled = 0
 " let g:airline#extensions#tabline#enabled = 1
@@ -291,10 +281,8 @@ function! AirlineInit()
       \ 's'  : ' S ',
       \ 'S'  : ' S ',
       \ }
-  if exists('*GTMStatusline')
-    call airline#parts#define_function('gtmstatus', 'GTMStatusline')
-    let g:airline_section_b = airline#section#create([g:airline_section_b, ' ', '[', 'gtmstatus', ']'])
-  endif
+
+    " let g:airline_section_b = airline#section#create([g:airline_section_b, ' ', '[', '%{FugitiveStatusline()}', ']'])
 
   " call airline#parts#define_raw('time', '%{strftime("%c"}')
   " let g:airline_section_y = airline#sections#create_right(['ffenc', 'time'])
@@ -311,7 +299,7 @@ if exists(":Tabularize")
 endif
 
 " expand-region
-map v <Plug>(expand_region_expand)
+" map v <Plug>(expand_region_expand)
 map C-v <Plug>(expand_region_shrink)
 
 hi CursorLine cterm=NONE ctermbg=239
@@ -336,9 +324,9 @@ let mapleader="\<Space>"
 
 noremap <leader>. @:
 
+nmap <leader>t :Vista finder<CR>
 " tagbar
 nmap <leader>T :TagbarToggle<CR>
-nmap <leader>t :TagbarOpenAutoClose<CR>
 let g:tagbar_type_go = {
 	\ 'ctagstype' : 'go',
 	\ 'kinds'     : [
@@ -425,7 +413,7 @@ command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
 
 
 command! -bang -nargs=? -complete=dir PFiles
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:60%'), <bang>0)
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:90%'), <bang>0)
 
 
 let g:pathToTemplates='~/.vim/snippets/'
@@ -450,9 +438,6 @@ nnoremap N Nzz
 
 nmap <Leader>z za
 
-" shortcut for Dash plugin (documentation)
-:nmap <silent> <leader>d <Plug>DashSearch
-
 vnoremap < <gv
 vnoremap > >gv
 map q: :q
@@ -464,11 +449,8 @@ let g:netrw_liststyle=3
 " For toggling
 noremap <Leader>n :NERDTreeToggle<cr>
 noremap <Leader>F :NERDTreeFind<cr>
-
 let NERDTreeShowHidden=1
-
 nmap <leader>w :FZF ~/notes/<CR>
-
 nmap <silent> \\ :nohlsearch<CR>
 
 "nmap <Leader>c "_ci"
@@ -550,7 +532,8 @@ nmap j gj
 nmap k gk
 nmap <S-i> i_<Esc>r
 nmap <S-C> <Plug>CommentaryLine
-nmap <Leader>p :set paste!<CR>
+nmap <Leader>P :set paste!<CR>
+nmap <Leader>p :PFiles<CR>
 nmap <leader>m :call ToggleMouse()<CR>
 nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
 " nmap <silent> <leader>ev :e ~/.vimrc<CR>
@@ -568,39 +551,6 @@ map <leader>mH yypVr=
 
 :iab <expr> 0--- strftime("# %c")
 
-" syntastic plugin
-nmap <Leader>s :SyntasticToggleMode<CR>
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-" let g:syntastic_mode_map = { 'mode': 'passive' }
-let g:syntastic_mode_map = { 'mode': 'active' }
-let g:syntastic_error_symbol = '⤫'
-let g:syntastic_style_error_symbol = '?!'
-let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_style_warning_symbol = '..'
-
-" let g:syntastic_python_checkers=['pylint', 'flake8']
-let g:syntastic_python_checkers=['flake8']
-" let g:syntastic_python_pylint_exec = 'python3 -m pylint'
-" let g:syntastic_python_flake8_exec = 'python3 -m flake8'
-let g:syntastic_python_python_exec = '/usr/local/bin/python3'
-let g:syntastic_python_flake8_exec = 'python3'
-let g:syntastic_python_flake8_args = ['-m', 'flake8']
-let g:syntastic_python_flake8_post_args='--ignore=E501,E128,E225,E221'
-let g:syntastic_debug = 1
-
-let g:godef_split = 0
-let g:go_fmt_fail_silently = 1
-let g:go_list_type = 'quickfix'
-let g:syntastic_go_checkers = ['golint', 'govet', 'gometalinter', 'gofmt']
-let g:syntastic_go_gometalinter_args = ['--disable-all', '--enable=errcheck']
-
 hi SpellBad ctermfg=160
 hi SpellCap ctermfg=226
 
@@ -613,12 +563,12 @@ let g:islime2_29_mode=1
 
 function! ToggleMouse()
   " check if mouse is enabled
-  if &mouse == 'a'
+  if &mouse == 'n'
     " disable mouse
     set mouse=
   else
     " enable mouse everywhere
-    set mouse=a
+    set mouse=n
   endif
 endfunc
 
@@ -640,16 +590,47 @@ nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
 "Never type the same word twice and maybe learn a new spellings!
 "Use the Linux dictionary when spelling is in doubt.
 "Window users can copy the file to their machine.
-function! Tab_Or_Complete()
-  if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
+" function! Tab_Or_Complete()
+"   if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
+"     return "\<C-N>"
+"   else
+"     return "\<Tab>"
+"   endif
+" endfunction
+
+
+" Use TAB to complete when typing words, else inserts TABs as usual.  Uses
+" dictionary, source files, and completor to find matching words to complete.
+
+" Note: usual completion is on <C-n> but more trouble to press all the time.
+" Never type the same word twice and maybe learn a new spellings!
+" Use the Linux dictionary when spelling is in doubt.
+function! Tab_Or_Complete() abort
+  " If completor is already open the `tab` cycles through suggested completions.
+  if pumvisible()
     return "\<C-N>"
+  " If completor is not open and we are in the middle of typing a word then
+  " `tab` opens completor menu.
+  elseif col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
+    return "\<C-R>=completor#do('complete')\<CR>"
   else
+    " If we aren't typing a word and we press `tab` simply do the normal `tab`
+    " action.
     return "\<Tab>"
   endif
 endfunction
 
+" Use `tab` key to select completions.  Default is arrow keys.
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-set dictionary="/usr/dict/words
+" Use tab to trigger auto completion.  Default suggests completions as you type.
+let g:completor_auto_trigger = 0
+inoremap <expr> <Tab> Tab_Or_Complete()
+
+
+
+set dictionary="/usr/share/dict/words"
 
 " autocmd FileType * set colorcolumn=0
 "python3 -m pylint autocmd FileType ruby,python,javascript,c,cpp,objc,rst let &colorcolumn="120,".join(range(120,999),",")
@@ -659,12 +640,11 @@ set dictionary="/usr/dict/words
 " nnoremap <leader>6 <Esc>:call ToggleHardMode()<CR>
 " let g:HardMode_level = 'wannabe'
 
+" terraform support
 au BufNewFile,BufRead *.tf set filetype=terraform
-autocmd FileType terraform let b:dispatch = 'terraform plan'
-autocmd filetype terraform nmap <leader>r :Dispatch<CR>
 autocmd filetype terraform nmap <leader>f :TerraformFmt<CR>
+let g:terraform_fmt_on_save = 0
 
-au BufNewFile,BufRead *.yml set filetype=yaml
 
 " markdown support
 " let g:gfm_syntax_enable_always = 1
@@ -674,6 +654,8 @@ au FileType markdown set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 au FileType markdown nnoremap <leader>r :.w !bash<CR>
 au FileType markdown vmap <Leader><Bslash> :EasyAlign*<Bar><Enter>
 au FileType markdown nmap <Leader>t :Toch<Enter>
+au FileType markdown execute 'setlocal dictionary=/usr/share/dict/words'
+au FileType markdown highlight htmlH1 ctermfg=DarkMagenta
 let g:markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
 let g:vim_markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
 
@@ -690,13 +672,15 @@ autocmd FileType python set expandtab shiftwidth=4 tabstop=8
 au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
 au FileType python set makeprg=python3\ %
 au FileType python nmap <Leader>f <Plug>(ale_fix)
-au FileType python nmap <Leader>y :Yapf<CR>
+au FileType python nmap <Leader>T :!python setup.py test<CR>
+au FileType python nmap <Leader>= <Plug>(ale_format)
 au FileType python nmap <leader>r :VimuxRunCommand("clear; python3 " . bufname("%"))<CR>
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType python xnoremap <leader>p :w !python3<cr>
 
-" au FileType python let g:syntastic_mode_map = { 'mode': 'active' }
-" au FileType python setlocal equalprg=yapf
+au FileType python let g:indentLine_enabled = 1
+
+" au FileType python noremap gd :LspDefinition<CR>
 
 " C support
 autocmd FileType c set expandtab shiftwidth=4 tabstop=8
@@ -707,9 +691,11 @@ au FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
 au FileType ruby nnoremap <leader>r :wa<CR>:!clear; ruby %<CR>
 " autocmd BufNewFile,BufRead *.rb set ft=ruby
 
-" go support
+" golang support
+let g:go_def_mode = "gopls"
 let g:go_fmt_command = "goimports"
 let g:go_info_mode = 'gocode'
+let g:go_metalinter_command='golangci-lint'
 " let g:go_auto_type_info = 1
 let g:go_fmt_experimental = 1
 let g:go_highlight_functions = 1
@@ -726,6 +712,7 @@ au FileType go set noexpandtab shiftwidth=4 tabstop=4
 au FileType go nmap <leader>b  <Plug>(go-build)
 au FileType go nmap <leader>r  <Plug>(go-run)
 au FileType go nmap <Leader>i  <Plug>(go-info)
+au FileType go nmap <Leader>c  <Plug>(go-test)
 au FileType go nmap <Leader>d  :GoDecls<CR>
 au FileType go nmap <Leader>f  :GoFmt<CR>
 au FileType go nmap <Leader>]  <Plug>(go-iferr)
@@ -750,8 +737,14 @@ au FileType html set expandtab shiftwidth=2 tabstop=2
 autocmd FileType vim set expandtab shiftwidth=2 tabstop=8 softtabstop=2
 
 " YAML support
-autocmd FileType yaml set expandtab shiftwidth=2 tabstop=8 softtabstop=2
-autocmd BufNewFile,BufRead *.sls set ft=yaml
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+au FileType yaml set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
+" set listchars=tab:•·,trail:•,extends:>,precedes:<
+" set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_ " Show “invisible” characters
+au FileType yaml set listchars=tab:•·,trail:•,extends:>,precedes:<
+
 
 " Clojure support
 au Filetype clojure nmap <leader>ck :Require<cr>
@@ -818,6 +811,9 @@ fu! ToggleCB()
 		let line = substitute(line, "\\[x\\]", "[ ]", "")
 	elseif(match(line, "\\[+\\]") != -1)
 		let line = substitute(line, "\\[+\\]", "[ ]", "")
+        else
+                let line = substitute(line, "-", "" , "")
+                let line = "- [ ] " . line
 	endif
 
 	call setline('.', line)
@@ -825,7 +821,76 @@ endf
 command! ToggleCB call ToggleCB()
 nmap <silent> <leader>- :ToggleCB<cr>
 
-nnoremap <leader>+ F-a [ ]<ESC>
 
+" yank history
+function! s:yank_list()
+  redir => ys
+  silent Yanks
+  redir END
+  return split(ys, '\n')[1:]
+endfunction
 
+function! s:yank_handler(reg)
+  if empty(a:reg)
+    echo "aborted register paste"
+  else
+    let token = split(a:reg, ' ')
+    execute 'Paste' . token[0]
+  endif
+endfunction
+
+command! FZFYank call fzf#run({
+\ 'source': <sid>yank_list(),
+\ 'sink': function('<sid>yank_handler'),
+\ 'options': '-m',
+\ 'down': 12
+\ })
+
+nnoremap <leader>Y :FZFYank<CR>
+
+if has("folding")
+  set foldenable        " enable folding
+  set foldmethod=syntax " fold based on syntax highlighting
+  set foldlevelstart=99 " start editing with all folds open
+
+  " toggle folds
+  " nnoremap <Space> za
+  " vnoremap <Space> za
+
+  set foldtext=FoldText()
+  function! FoldText()
+    let l:lpadding = &fdc
+    redir => l:signs
+      execute 'silent sign place buffer='.bufnr('%')
+    redir End
+    let l:lpadding += l:signs =~ 'id=' ? 2 : 0
+
+    if exists("+relativenumber")
+      if (&number)
+        let l:lpadding += max([&numberwidth, strlen(line('$'))]) + 1
+      elseif (&relativenumber)
+        let l:lpadding += max([&numberwidth, strlen(v:foldstart - line('w0')), strlen(line('w$') - v:foldstart), strlen(v:foldstart)]) + 1
+      endif
+    else
+      if (&number)
+        let l:lpadding += max([&numberwidth, strlen(line('$'))]) + 1
+      endif
+    endif
+
+    " expand tabs
+    let l:start = substitute(getline(v:foldstart), '\t', repeat(' ', &tabstop), 'g')
+    let l:end = substitute(substitute(getline(v:foldend), '\t', repeat(' ', &tabstop), 'g'), '^\s*', '', 'g')
+
+    let l:info = ' (' . (v:foldend - v:foldstart) . ')'
+    let l:infolen = strlen(substitute(l:info, '.', 'x', 'g'))
+    let l:width = winwidth(0) - l:lpadding - l:infolen
+
+    let l:separator = ' … '
+    let l:separatorlen = strlen(substitute(l:separator, '.', 'x', 'g'))
+    let l:start = strpart(l:start , 0, l:width - strlen(substitute(l:end, '.', 'x', 'g')) - l:separatorlen)
+    let l:text = l:start . ' … ' . l:end
+
+    return l:text . repeat(' ', l:width - strlen(substitute(l:text, ".", "x", "g"))) . l:info
+  endfunction
+endif
 
