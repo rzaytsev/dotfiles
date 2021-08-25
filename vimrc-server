@@ -1,0 +1,469 @@
+colorscheme Tomorrow-Night-Eighties
+
+syntax on
+set ai                  " auto indenting
+set history=400         " keep 400 lines of history
+set ruler               " show the cursor position
+set hlsearch            " highlight the last searched term
+set nocompatible " Make Vim more useful
+set clipboard=unnamed,autoselect " Use the OS clipboard by default (on versions compiled with `+clipboard`)
+set cursorline " Highlight current line
+" set cursorlineopt=screenline
+set tabstop=4 " Make tabs as wide as two spaces
+set hlsearch " Highlight searches
+set ignorecase " Ignore case of searches
+set incsearch " Highlight dynamically as pattern is typed
+set laststatus=2 " Always show status line
+set showmode " Show the current mode
+set ruler " Show the cursor position
+" set title titlestring=" Show the filename in the window titlebar
+set showcmd " Show the (partial) command as it’s being typed
+" indent
+set smartindent
+set softtabstop=2
+set shiftwidth=4
+set expandtab
+set undofile
+set undodir=~/.vim/undodir
+set backupdir=~/.vim/.backup/
+set directory=~/.vim/.swp/
+set noswapfile
+set showmatch matchtime=3
+set autoread
+set encoding=utf-8
+set t_Co=256
+set backspace=indent,eol,start
+set hidden
+set foldmethod=indent
+set foldlevel=99
+" set scrolloff=999
+set visualbell
+set ttyfast
+set completeopt-=preview
+set nobackup
+set nowritebackup
+set cmdheight=2
+set shortmess+=c
+
+set splitbelow
+set splitright
+set formatoptions+=j
+
+
+set rtp+=/usr/local/opt/fzf
+
+call plug#begin('~/.vim/plugged')
+
+"https://github.com/junegunn/fzf.vim
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-sensible'
+Plug 'Raimondi/delimitMate'
+Plug 'liuchengxu/vista.vim'
+Plug 'plasticboy/vim-markdown'
+Plug 'junegunn/rainbow_parentheses.vim'
+" Plug 'airblade/vim-gitgutter'
+Plug 'duggiefresh/vim-easydir'
+Plug 'hashivim/vim-terraform'
+Plug 'nelstrom/vim-visual-star-search'
+Plug 'bogado/file-line'
+Plug '907th/vim-auto-save'
+Plug 'fatih/vim-go', "{ 'tag': '*' } https://github.com/fatih/vim-go-tutorial
+Plug 'simnalamburt/vim-mundo'
+Plug 'scrooloose/nerdtree'
+Plug 'Yggdroot/indentLine'
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'davidhalter/jedi-vim'
+Plug 'alfredodeza/pytest.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dbridges/vim-markdown-runner'
+
+call plug#end()
+
+filetype off
+filetype plugin indent on      " use the file type plugins
+
+let mapleader="\<Space>"
+
+" NerdTree
+noremap <Leader>N :NERDTreeFind<cr>
+let NERDTreeShowHidden=1
+
+
+" IndentLine
+let g:indentLine_enabled = 0
+let g:indentLine_char='┊'
+
+
+" autoSave
+let g:auto_save = 1
+let g:auto_save_in_insert_mode = 0
+let g:auto_save_silent = 1
+
+" Show “invisible” characters
+set list
+set listchars=tab:•·,trail:•,extends:>,precedes:<
+
+" When editing a file, always jump to the last cursor position
+autocmd BufReadPost *
+      \ if ! exists("g:leave_my_cursor_position_alone") |
+      \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+      \ exe "normal g'\"" |
+      \ endif |
+      \ endif
+
+vnoremap < <gv
+vnoremap > >gv
+
+nnoremap n nzz
+nnoremap N Nzz
+
+nnoremap <Tab> :Buffers<CR>
+" CoC
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+
+" FZF
+let g:fzf_buffers_jump = 1
+let g:fzf_layout = { 'down': '~50%' }
+" nnoremap <leader>b :Buffers<CR>
+nmap <leader>h :History<CR>
+nmap <leader>H :History!<CR>
+nmap <leader>a :Rg<CR>
+nmap <leader>A :Rg!<CR>
+
+nmap <leader>t :Vista finder<CR>
+nmap <leader>V :Vista!!<CR>
+nmap <leader>T :BTags<CR>
+
+nmap <Leader>/ :BLines<CR>
+nmap <Leader>' :Marks<CR>
+nmap <Leader>\ :Lines<CR>
+" nmap <Leader>t :BTags<CR>
+" nmap <Leader>T :Tags<CR>
+
+function! ContextualFZF()
+    " Determine if inside a git repo
+    silent exec "!git rev-parse --show-toplevel"
+    redraw!
+
+    let command = 'fd --type f --hidden --exclude .git .'
+
+    if v:shell_error
+        " Search in current directory
+        call fzf#run({
+              \'source': command,
+              \'sink': 'e',
+              \'down': '50%',
+        \})
+    else
+        " Search in entire git repo
+        call fzf#run({
+              \'source': command,
+              \'sink': 'e',
+              \'down': '50%',
+              \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
+        \})
+    endif
+endfunction
+nnoremap <Leader>e :call ContextualFZF()<CR>
+
+function! s:append_dir_with_fzf(line)
+  call fzf#run(fzf#wrap({
+    \ 'options': ['--prompt', a:line.'> '],
+    \ 'source': 'find . -type d',
+    \ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+  return ''
+endfunction
+
+cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
+
+command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
+  \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
+  \  'sink': 'cd'}))
+
+
+command! -bang -nargs=? -complete=dir PFiles
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:90%'), <bang>0)
+
+
+let g:pathToTemplates='~/.vim/snippets/'
+function! GoSink(file)
+    execute ':0r '.g:pathToTemplates.a:file
+endfunction
+
+command! Go call fzf#run({
+    \  'source': 'ls '.g:pathToTemplates,
+    \  'sink':    function('GoSink')})
+
+command! -bang -nargs=? -complete=dir FFiles
+    \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
+
+
+command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
+
+
+
+inoremap <C-e> <C-o>$
+inoremap <C-a> <C-o>0
+cnoremap <C-a>  <Home>
+cnoremap <C-e>  <End>
+
+inoremap jj <ESC>l
+inoremap оо <ESC>l
+inoremap jk <ESC>l
+
+cmap w! w !sudo tee % >/dev/null
+
+
+" Automatically removing all trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
+match Error /\s\+$/
+
+nnoremap <C-j> <C-d>
+nnoremap <C-k> <C-u>
+
+nmap j gj
+nmap k gk
+nmap <S-i> i_<Esc>r
+nmap <S-C> <Plug>CommentaryLine
+nmap <Leader>P :set paste!<CR>
+nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
+" nmap <silent> <leader>ev :e ~/.vimrc<CR>
+" nmap <silent> <leader>sv :so ~/.vimrc<CR>
+nnoremap <Leader>r :make<CR>
+nnoremap <Leader>R :%s/\<<C-r><C-w>\>/<C-r><C-w>/g<Left><Left>
+
+nmap <silent> \\ :nohlsearch<CR>
+
+
+nnoremap Y yy
+map <leader>v {jV$}
+
+set signcolumn=yes
+
+
+hi CursorLineNR cterm=bold
+augroup CLNRSet
+    autocmd! ColorScheme * hi CursorLineNR cterm=bold
+augroup END
+
+
+" https://github.com/vim/vim/blob/master/runtime/doc/russian.txt
+" Enable hotkeys for Russian layout
+set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+" setlocal spell spelllang=en_us,ru_ru
+
+
+
+" SpellCheck
+set spelllang=en_us
+set spellfile=~/.vim/spell/en.utf-8.add
+set dictionary="/usr/share/dict/words"
+hi clear SpellBad
+hi SpellBad cterm=underline
+hi SpellBad ctermfg=160
+hi SpellCap ctermfg=226
+nmap <silent> <leader>D :set spell!<CR>
+
+
+" Mouse on/off
+nmap <leader>m :call ToggleMouse()<CR>
+function! ToggleMouse()
+  " check if mouse is enabled
+  if &mouse == 'n'
+    " disable mouse
+    set mouse=
+  else
+    " enable mouse everywhere
+    set mouse=n
+  endif
+endfunc
+
+
+
+
+" terraform support
+au BufNewFile,BufRead *.tf set filetype=terraform
+autocmd filetype terraform nmap <leader>f :TerraformFmt<CR>
+let g:terraform_fmt_on_save = 0
+
+
+" markdown support
+let g:markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
+let g:vim_markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
+" au Filetype markdown setlocal spell
+highlight htmlH1 ctermfg=yellow
+" let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_folding_style_pythonic = 1
+au FileType markdown set conceallevel=2
+au FileType markdown set expandtab shiftwidth=2 tabstop=4
+let g:vim_markdown_folding_level = 99
+let g:vim_markdown_conceal_code_blocks = 0
+autocmd FileType markdown nnoremap <buffer> <Leader>r :MarkdownRunner<CR>
+autocmd FileType markdown nnoremap <buffer> <Leader>R :MarkdownRunnerInsert<CR>
+
+
+" python support
+au FileType python set expandtab shiftwidth=4 tabstop=8
+au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
+au FileType python set makeprg=python3\ %
+setlocal omnifunc=pythoncomplete#Complete
+au FileType python let g:indentLine_enabled = 1
+au FileType python setlocal completeopt-=preview
+au FileType python nmap <silent><Leader>tf <Esc>:Pytest function<CR>
+au FileType python nmap <silent><Leader>tc <Esc>:Pytest class<CR>
+au FileType python nmap <silent><Leader>tp <Esc>:Pytest project<CR>
+autocmd FileType python iabbrev start #!/usr/bin/env python3
+                                    \<CR><CR>
+                                    \def main():<CR>
+                                    \<esc>0i   xxx<CR>
+                                    \<CR><CR>
+                                    \<esc>0iif __name__ == "__main__":<CR>
+                                    \main()
+                                    \<Esc>?xxx<CR>cw
+
+" C support
+autocmd FileType c set expandtab shiftwidth=4 tabstop=8
+au FileType c  nnoremap <leader>r :!clear; /usr/local/bin/c %<CR>
+
+" ruby support
+au FileType ruby set expandtab shiftwidth=2 tabstop=2 softtabstop=2
+au FileType ruby nnoremap <leader>r :wa<CR>:!clear; ruby %<CR>
+" autocmd BufNewFile,BufRead *.rb set ft=ruby
+
+" golang support
+
+au FileType taskpaper set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
+
+au FileType json noremap <buffer> <silent> <expr> <leader>p jsonpath#echo()
+au FileType json noremap <buffer> <silent> <expr> <leader>g jsonpath#goto()
+au FileType json set expandtab shiftwidth=2 tabstop=8 softtabstop=2
+
+" au FileType go au BufWritePre <buffer> %!gofmt
+" let g:go_fmt_options = "-tabs=false -tabwidth=4"
+
+au FileType html set expandtab shiftwidth=2 tabstop=2
+
+" vim
+autocmd FileType vim set expandtab shiftwidth=2 tabstop=8 softtabstop=2
+
+" YAML support
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+au FileType yaml let g:indentLine_enabled = 1
+au FileType yaml set listchars=tab:•·,trail:•,extends:>,precedes:<
+
+
+" au FileType yaml set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
+" set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_ " Show “invisible” characters
+" au FileType yaml set listchars=tab:•·,trail:•,extends:>,precedes:<
+
+
+" Clojure support
+au Filetype clojure nmap <leader>ck :Require<cr>
+
+"JS
+augroup filetype javascript syntax=javascript
+
+" rainbow_parentheses
+let g:rainbow#blacklist = [233, 234, 9 ,160]
+augroup rainbow_code
+  autocmd!
+  autocmd FileType lisp,clojure,scheme,python,ruby,go,json RainbowParentheses
+augroup END
+
+
+autocmd Filetype gitcommit setlocal spell
+
+
+match ErrorMsg '\%>120v.\+'
+match ErrorMsg '\s\+$'
+
+fu! ToggleCB()
+	let line = getline('.')
+
+	if(match(line, "\\[ \\]") != -1)
+		let line = substitute(line, "\\[ \\]", "[x]", "")
+	elseif(match(line, "\\[x\\]") != -1)
+		let line = substitute(line, "\\[x\\]", "[ ]", "")
+	elseif(match(line, "\\[+\\]") != -1)
+		let line = substitute(line, "\\[+\\]", "[ ]", "")
+        else
+                let line = substitute(line, "-", "" , "")
+                let line = "- [ ] " . line
+	endif
+
+	call setline('.', line)
+endf
+command! ToggleCB call ToggleCB()
+map <silent> <leader>- :ToggleCB<cr>
+
+iabbrev <expr> ddd strftime('%d-%m-%Y')
+:iab <expr> DDD strftime("# %c")
+
+
+function! ToggleMovement(firstOp, thenOp)
+  let pos = getpos('.')
+  execute "normal! " . a:firstOp
+  if pos == getpos('.')
+    execute "normal! " . a:thenOp
+  endif
+endfunction
+
+nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
+
+
+" let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+" let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+" let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+
+
+" hi User1 ctermfg=yellow ctermbg=454545
+" hi User2 ctermfg=yellow ctermbg=454545
+" hi User3 ctermfg=yellow ctermbg=454545
+" hi User4 ctermfg=yellow ctermbg=454545
+" hi User5 ctermfg=yellow ctermbg=454545
+
+" set statusline=
+" set statusline +=%1*\ %n\ %*            "buffer number
+" " set statusline +=%5*%{&ff}%*            "file format
+" set statusline +=%3*%y%*                "file type
+" set statusline +=%4*\ %<%F%*            "full path
+" set statusline +=%2*%m%*                "modified flag
+" set statusline +=%1*%=%5l%*             "current line
+" set statusline +=%2*/%L%*               "total lines
+" set statusline +=%1*%4v\ %*             "virtual column number
+" " set statusline +=%2*0x%04B\ %*          "character under cursor
+
+" Specify an alternate shell command for a certain language
+" let g:markdown_runners['python'] = 'python3'
+
+" Specify your own Vim script function for further customization.
+" The function should receive a list of strings, representing the contents of
+" the code block, and return a single string with the results.
+" function! MyHtmlRunner(src)
+"   " ... your custom processing
+"   return "Results"
+" endfunction
+
+" let g:markdown_runners['html'] = function('MyHtmlRunner')
+
+

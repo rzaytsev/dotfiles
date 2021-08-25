@@ -1,0 +1,144 @@
+# Set prefix key to c-f instead of default c-b
+unbind C-b
+set -g prefix C-f
+bind C-f send-prefix
+
+# toogle last window by hitting again C-f
+# bind-key C-f last-window
+
+# Start windows and pane numbering with index 1 instead of 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# re-number windows when one is closed
+set -g renumber-windows on
+
+# highlight window when it has new activity
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Show times longer than supposed
+set -g display-panes-time 2000
+
+# {n}vim compability
+set -g default-terminal "xterm-256color"
+
+# Split horiziontal and vertical splits, instead of % and "
+bind-key v split-window -h -c '#{pane_current_path}'
+bind-key s split-window -v -c '#{pane_current_path}'
+
+# Pressing Ctrl+Shift+Left (will move the current window to the left. Similarly
+# right. No need to use the modifier (C-b).
+bind-key -n C-S-Left swap-window -t -1
+bind-key -n C-S-Right swap-window -t +1
+
+# Source file
+unbind r
+bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+# Use vim keybindings in copy mode
+setw -g mode-keys vi
+
+# Select and copy with v and y, instead of default space and enter
+bind-key -T edit-mode-vi Up send-keys -X history-up
+bind-key -T edit-mode-vi Down send-keys -X history-down
+unbind-key -T copy-mode-vi Space     ;   bind-key -T copy-mode-vi v send-keys -X begin-selection
+unbind-key -T copy-mode-vi Enter     ;   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+unbind-key -T copy-mode-vi C-v       ;   bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+unbind-key -T copy-mode-vi [         ;   bind-key -T copy-mode-vi [ send-keys -X begin-selection
+unbind-key -T copy-mode-vi ]         ;   bind-key -T copy-mode-vi ] send-keys -X copy-selection
+
+set -g set-clipboard on
+set -ag terminal-overrides "vte*:XT:Ms=\\E]52;c;%p2%s\\7,xterm*:XT:Ms=\\E]52;c;%p2%s\\7"
+
+# Faster command sequence
+set -s escape-time 0
+
+# Have a very large history
+set -g history-limit 1000000
+
+# Mouse mode on
+set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+set -g mouse on
+
+# Set title
+set -g set-titles on
+set -g set-titles-string "#T"
+
+# Equally resize all panes
+bind-key = select-layout even-horizontal
+bind-key | select-layout even-vertical
+
+# Resize panes
+bind-key J resize-pane -D 10
+bind-key K resize-pane -U 10
+bind-key H resize-pane -L 10
+bind-key L resize-pane -R 10
+
+# Select panes
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key h select-pane -L
+bind-key l select-pane -R
+
+# Disable confirm before killing
+bind-key x kill-pane
+
+set -g status-bg "colour236"
+set -g status-justify "left"
+set -g status-position "top"
+set -g status-left-length "100"
+set -g status "on"
+
+
+set -g status-right-length "100"
+set -g pane-border-format "#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD)"
+setw -g window-status-separator ""
+
+setw -g window-status-format '#[fg=colour245,bg=colour236] #I #[fg=colour245,bg=colour236]#(pwd="#{pane_current_path}"; echo ${pwd####*/})|#W '
+setw -g window-status-current-format '#[fg=colour190,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour190,bg=colour240] #I #[fg=colour190,bg=colour240]#(pwd="#{pane_current_path}"; echo ${pwd####*/})|#W #[fg=colour190,bg=colour236,nobold,nounderscore,noitalics]'
+
+set-option -g status-interval 1
+
+
+set -g status-left "#{prefix_highlight}#[fg=colour22,bg=colour148,bold] #S #[fg=colour148,bg=colour236,nobold,nounderscore,noitalics]"
+set -g status-right "#[fg=colour245] #[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#[fg=colour250,bg=colour240] %a, %d %h | %H%M %Z #[fg=colour252,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour241,bg=colour252]"
+
+
+# setw -g window-status-bell-attr bold
+# setw -g window-status-bell-fg colour255
+# setw -g window-status-bell-bg colour1
+
+# }
+# The messages {
+
+# set -g message-attr bold
+# set -g message-fg colour232
+# set -g message-bg colour166
+
+# }
+
+# List of plugins
+# see this https://github.com/tmux-plugins/tpm to installation
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'tmux-plugins/tmux-urlview'
+set -g @plugin 'wfxr/tmux-fzf-url'
+set -g @plugin 'tmux-plugins/tmux-battery'
+
+####
+# Smart pane switching with awareness of Nvim/Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+# set -g @plugin 'christoomey/vim-tmux-navigator'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+# iTerm2 issue
+setw -g aggressive-resize off
+set-window-option -g aggressive-resize off
+
+
