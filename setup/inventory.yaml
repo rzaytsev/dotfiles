@@ -1,0 +1,4 @@
+all:
+  hosts:
+    scw2:
+      ansible_host: 51.15.241.97
