@@ -285,7 +285,7 @@ nmap <silent> <leader>D :set spell!<CR>
 
 
 " Mouse on/off
-nmap <leader>m :call ToggleMouse()<CR>
+nmap <leader>M :call ToggleMouse()<CR>
 function! ToggleMouse()
   " check if mouse is enabled
   if &mouse == 'n'
@@ -296,8 +296,6 @@ function! ToggleMouse()
     set mouse=n
   endif
 endfunc
-
-
 
 
 " terraform support
@@ -325,6 +323,7 @@ autocmd FileType markdown nnoremap <buffer> <Leader>R :MarkdownRunnerInsert<CR>
 au FileType python set expandtab shiftwidth=4 tabstop=8
 au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
 au FileType python set makeprg=python3\ %
+au FileType python nnoremap <leader>m :make<CR>
 setlocal omnifunc=pythoncomplete#Complete
 au FileType python let g:indentLine_enabled = 1
 au FileType python setlocal completeopt-=preview
