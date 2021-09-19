@@ -3,4 +3,4 @@ create_user: roman
 
 copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
-sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'zsh', 'net-tools', 'golang',  'fzf', 'python3', 'fd-find', 'mosh', 'awscli', 'libtool', 'ansible', 'cmake', 'libvterm-dev']
+sys_packages: [ 'curl', 'vim', 'git', 'ufw', 'zsh', 'net-tools', 'golang',  'fzf', 'python3', 'fd-find', 'mosh', 'awscli', 'libtool', 'ansible', 'cmake', 'libvterm-dev', 'containerd']
