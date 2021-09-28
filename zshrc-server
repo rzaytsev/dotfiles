@@ -124,3 +124,7 @@ zle -N fancy-ctrl-z
 bindkey '^Z' fancy-ctrl-z
 
 source ~/.aliases
+
+source $HOME/.cargo/env
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
