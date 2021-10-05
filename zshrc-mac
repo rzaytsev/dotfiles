@@ -1,0 +1,74 @@
+# If you come from bash you might have to change your $PATH.
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH="/opt/homebrew/Cellar/coreutils/9.0/bin:$PATH"
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git fzf fasd)
+source $ZSH/oh-my-zsh.sh
+
+export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+export EDITOR="/usr/bin/vim"
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+COLORTERM="truecolor"
+
+#FZF
+FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --color '
+alias fzt="fzf-tmux"
+FZF_COMPLETION_TRIGGER="@"
+
+alias -s go="go run"
+alias -s py="python3"
+
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
+source ~/.aliases
+
+source $HOME/.cargo/env
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --color '
+
+alias :q="exit"
+alias ptp='python3 -m ptpython'
+alias ptp2='python -m ptpython'
+alias sed=gsed
+
+alias myip="curl -s http://checkip.amazonaws.com"
+alias get_ssh_keys='for k in $(echo id_rsa personal_rsa bitbucket github devops_vpc_infra.pem); do ssh-add -K /Users/rzaytsev/.ssh/$k; done'
+
+alias -s go="go run"
+alias -s py="python3"
+
+alias netstat="lsof -i -n -P | grep 'TCP\|UDP'| grep ESTABLISHED"
+
+function dict(){
+    open "dict://$1"
+}
+
+alias 'brew-up'='brew update && brew upgrade && brew cleanup -s && rm -rf $(brew --cache)'
+
+
+
