@@ -1,4 +1,4 @@
-" colorscheme Tomorrow-Night-Eighties
+colorscheme Tomorrow-Night-Eighties
 
 syntax on
 set ai                  " auto indenting
@@ -82,11 +82,9 @@ Plug 'davidhalter/jedi-vim'
 Plug 'alfredodeza/pytest.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dbridges/vim-markdown-runner'
-Plug 'arcticicestudio/nord-vim'
 
 call plug#end()
 
-colorscheme nord
 
 filetype off
 filetype plugin indent on      " use the file type plugins
