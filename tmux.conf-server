@@ -110,7 +110,7 @@ set -g @plugin 'tmux-plugins/tpm'
 # set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 # set -g @plugin 'wfxr/tmux-fzf-url'
-set -g @plugin 'arcticicestudio/nord-tmux'
+# set -g @plugin 'arcticicestudio/nord-tmux'
 
 ####
 # Smart pane switching with awareness of Nvim/Vim splits.
