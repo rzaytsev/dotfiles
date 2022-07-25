@@ -83,20 +83,67 @@ Plug 'alfredodeza/pytest.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dbridges/vim-markdown-runner'
 " Plug 'arcticicestudio/nord-vim'
+" Plug 'dense-analysis/ale'
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'itchyny/lightline.vim'
 
 call plug#end()
 
-" colorscheme nord
+
 
 filetype off
 filetype plugin indent on      " use the file type plugins
 
 let mapleader="\<Space>"
 
-" NerdTree
-noremap <Leader>N :NERDTreeFind<cr>
-let NERDTreeShowHidden=1
+" Vista
+let g:vista_executive_for = {
+  \ 'tf': 'coc',
+  \ 'terraform': 'coc',
+  \ }
+" Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+let g:vista#renderer#enable_icon = 1
 
+" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+
+" lightline
+set noshowmode
+
+let g:lightline = {
+    \ 'colorscheme': 'wombat',
+      \ 'mode_map': {
+        \ 'n' : 'N',
+        \ 'i' : 'I',
+        \ 'R' : 'R',
+        \ 'v' : 'V',
+        \ 'V' : 'VL',
+        \ "\<C-v>": 'VB',
+        \ 'c' : 'C',
+        \ 's' : 'S',
+        \ 'S' : 'SL',
+        \ "\<C-s>": 'SB',
+        \ 't': 'T',
+        \ },
+ \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
+
+
+
+" NerdTree
+noremap <Leader>n :NERDTreeFind<cr>
+let NERDTreeShowHidden=1
 
 " IndentLine
 let g:indentLine_enabled = 0
@@ -152,9 +199,9 @@ nmap <leader>H :History!<CR>
 nmap <leader>a :Rg<CR>
 nmap <leader>A :Rg!<CR>
 
-nmap <leader>t :Vista finder<CR>
+nmap <leader>T :Vista finder<CR>
 nmap <leader>V :Vista!!<CR>
-nmap <leader>T :BTags<CR>
+" nmap <leader>T :BTags<CR>
 
 nmap <Leader>/ :BLines<CR>
 nmap <Leader>' :Marks<CR>
@@ -320,7 +367,8 @@ let g:vim_markdown_folding_level = 99
 let g:vim_markdown_conceal_code_blocks = 0
 autocmd FileType markdown nnoremap <buffer> <Leader>r :MarkdownRunner<CR>
 autocmd FileType markdown nnoremap <buffer> <Leader>R :MarkdownRunnerInsert<CR>
-
+au FileType markdown nmap <Leader>gte :r!~/.scripts/get_today_events.sh +\%c<CR>
+au FileType markdown set suffixesadd=.md
 
 " python support
 au FileType python set expandtab shiftwidth=4 tabstop=8
@@ -352,6 +400,14 @@ au FileType ruby nnoremap <leader>r :wa<CR>:!clear; ruby %<CR>
 " autocmd BufNewFile,BufRead *.rb set ft=ruby
 
 " golang support
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
+au FileType go let g:indentLine_enabled = 1
+
+let g:go_list_type = "quickfix"
+
+
 
 au FileType taskpaper set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 
@@ -418,9 +474,8 @@ endf
 command! ToggleCB call ToggleCB()
 map <silent> <leader>- :ToggleCB<cr>
 
-iabbrev <expr> ddd strftime('%d-%m-%Y')
-:iab <expr> DDD strftime("# %c")
-
+iabbrev <expr> ddd strftime('%Y-%m-%d %a')
+iabbrev <expr> DDD strftime("# %c")
 
 function! ToggleMovement(firstOp, thenOp)
   let pos = getpos('.')
@@ -467,5 +522,93 @@ nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
 " endfunction
 
 " let g:markdown_runners['html'] = function('MyHtmlRunner')
+
+
+
+
+
+if has("folding")
+  set foldenable        " enable folding
+  set foldmethod=syntax " fold based on syntax highlighting
+  set foldlevelstart=99 " start editing with all folds open
+
+  " toggle folds
+  " nnoremap <Space> za
+  " vnoremap <Space> za
+
+  set foldtext=FoldText()
+  function! FoldText()
+    let l:lpadding = &fdc
+    redir => l:signs
+      execute 'silent sign place buffer='.bufnr('%')
+    redir End
+    let l:lpadding += l:signs =~ 'id=' ? 2 : 0
+
+    if exists("+relativenumber")
+      if (&number)
+        let l:lpadding += max([&numberwidth, strlen(line('$'))]) + 1
+      elseif (&relativenumber)
+        let l:lpadding += max([&numberwidth, strlen(v:foldstart - line('w0')), strlen(line('w$') - v:foldstart), strlen(v:foldstart)]) + 1
+      endif
+    else
+      if (&number)
+        let l:lpadding += max([&numberwidth, strlen(line('$'))]) + 1
+      endif
+    endif
+
+    " expand tabs
+    let l:start = substitute(getline(v:foldstart), '\t', repeat(' ', &tabstop), 'g')
+    let l:end = substitute(substitute(getline(v:foldend), '\t', repeat(' ', &tabstop), 'g'), '^\s*', '', 'g')
+
+    let l:info = ' (' . (v:foldend - v:foldstart) . ')'
+    let l:infolen = strlen(substitute(l:info, '.', 'x', 'g'))
+    let l:width = winwidth(0) - l:lpadding - l:infolen
+
+    let l:separator = ' … '
+    let l:separatorlen = strlen(substitute(l:separator, '.', 'x', 'g'))
+    let l:start = strpart(l:start , 0, l:width - strlen(substitute(l:end, '.', 'x', 'g')) - l:separatorlen)
+    let l:text = l:start . ' … ' . l:end
+
+    return l:text . repeat(' ', l:width - strlen(substitute(l:text, ".", "x", "g"))-2) . l:info
+  endfunction
+endif
+
+" syntax match VimwikiListTodo '\v(\s+)?(-|\*)\s\[\s\]'hs=e-4 conceal cchar=
+" syntax match VimwikiListTodo '\v(\s+)?(-|\*)\s\[X\]'hs=e-4 conceal cchar=
+" syntax match VimwikiListTodo '\v(\s+)?(-|\*)\s\[-\]'hs=e-4 conceal cchar=☒
+" syntax match VimwikiListTodo '\v(\s+)?(-|\*)\s\[\.\]'hs=e-4 conceal cchar=⊡
+" syntax match VimwikiListTodo '\v(\s+)?(-|\*)\s\[o\]'hs=e-4 conceal cchar=⬕
+
+" hi def link todoCheckbox Todo
+
+" syntax keyword Normal beta BETA conceal cchar=β
+
+function! Twf()
+  let temp = tempname()
+  execute 'silent ! twf ' . @% . ' > ' . temp
+  redraw!
+  try
+    let out = filereadable(temp) ? readfile(temp) : []
+  finally
+    silent! call delete(temp)
+  endtry
+  if !empty(out)
+    execute 'edit! ' . out[0]
+  endif
+endfunction
+
+nnoremap <silent> <Space>3 :call Twf()<CR>
+
+ino <C-X> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
+
+
+highlight TAGS ctermfg=yellow
+call matchadd("TAGS", '#\w\+')
+
+highlight CONTEXT ctermfg=blue
+call matchadd("CONTEXT", '@\a\+')
+
+highlight TODO ctermfg=LightMagenta
+call matchadd("TODO", 'TODO\S*')
 
 

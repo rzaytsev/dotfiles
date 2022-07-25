@@ -18,8 +18,8 @@ setw -g pane-base-index 1
 set -g renumber-windows on
 
 # highlight window when it has new activity
-setw -g monitor-activity on
-set -g visual-activity on
+setw -g monitor-activity off
+set -g visual-activity off
 
 # Show times longer than supposed
 set -g display-panes-time 2000
@@ -122,6 +122,9 @@ setw -g window-status-separator ""
 set -g status-right '#{s|/Users/myname|~|:pane_current_path}'
 
 
+# set -g window-style 'fg=colour247,bg=colour236'
+# set -g window-active-style 'fg=colour250,bg=black'
+
 
 setw -g window-status-format '#[fg=colour245,bg=colour236] #I #[fg=colour245,bg=colour236]#(pwd="#{s|/Users/r.zaytsev|🏠|:pane_current_path}"; echo ${pwd####*/})|#W '
 # setw -g window-status-current-format '#[fg=colour236,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour231,bg=colour240] #I #[fg=colour231,bg=colour240]#(pwd="#{pane_current_path}"; echo ${pwd####*/})|#W #[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]'
@@ -162,13 +165,13 @@ set -g status-right "#[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @plugin 'tmux-plugins/tmux-open'
+# set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 # set -g @plugin 'wfxr/tmux-fzf-url'
 set -g @plugin 'tmux-plugins/tmux-battery'
 # set -g @plugin 'tmux-plugins/tmux-sidebar'
 
-# set -g @fzf-url-bind 'x'
+set -g @fzf-url-bind 'x'
 # set -g @fzf-url-extra-filter 'grep -oE "\b[a-zA-Z]+\.txt\b"'
 
 ####

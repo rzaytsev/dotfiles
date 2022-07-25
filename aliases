@@ -1,5 +1,11 @@
 alias links="grep -i http ~/notes/*.md | fzf -e |  sed -rn 's@^.*\[(.*)\]\((.*)/.*$@\1 \2@p'"
 alias todos="ack --no-group '(- [ ]) (.*)' --output=' $1 $2'"
 alias ll="exa --long --git --all"
+
 alias ptp="python3 -m ptpython"
+
+alias tree="exa --all --tree"
+alias update='brew update && brew upgrade && brew cleanup; vim +PlugUpdate +qall'
+alias cal_today='icalBuddy -f -npn -nc -iep "title,datetime" -ps "| |" -po "datetime,title" -tf "%H%M" -df "" -ic Calendar eventsToday'
+alias nv="nvim"
 
