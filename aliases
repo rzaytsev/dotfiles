@@ -9,3 +9,5 @@ alias update='brew update && brew upgrade && brew cleanup; vim +PlugUpdate +qall
 alias cal_today='icalBuddy -f -npn -nc -iep "title,datetime" -ps "| |" -po "datetime,title" -tf "%H%M" -df "" -ic Calendar eventsToday'
 alias nv="nvim"
 
+alias vpn-off='launchctl unload /Library/LaunchAgents/com.paloaltonetworks.gp.pangp*'
+alias vpn-on='launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangp*'

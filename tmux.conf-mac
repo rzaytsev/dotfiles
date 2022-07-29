@@ -25,7 +25,8 @@ set -g visual-activity off
 set -g display-panes-time 2000
 
 # {n}vim compability
-set -g default-terminal "xterm-256color"
+set -g default-terminal "screen-256color"
+set-option -sa terminal-overrides ',xterm-256color:RGB'
 
 # Split horiziontal and vertical splits, instead of % and "
 bind-key v split-window -h -c '#{pane_current_path}'

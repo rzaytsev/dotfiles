@@ -370,6 +370,10 @@ autocmd FileType markdown nnoremap <buffer> <Leader>R :MarkdownRunnerInsert<CR>
 au FileType markdown nmap <Leader>gte :r!~/.scripts/get_today_events.sh +\%c<CR>
 au FileType markdown set suffixesadd=.md
 
+let g:vim_markdown_new_list_item_indent = 2
+let g:vim_markdown_no_extensions_in_markdown = 1
+
+
 " python support
 au FileType python set expandtab shiftwidth=4 tabstop=8
 au FileType python nnoremap <buffer> <F9> :wa<CR>:!clear; python %<CR>
@@ -600,6 +604,8 @@ endfunction
 nnoremap <silent> <Space>3 :call Twf()<CR>
 
 ino <C-X> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
+
+
 
 
 highlight TAGS ctermfg=yellow
