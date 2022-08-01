@@ -7,7 +7,7 @@ set ruler               " show the cursor position
 set hlsearch            " highlight the last searched term
 set nocompatible " Make Vim more useful
 set clipboard=unnamed,autoselect " Use the OS clipboard by default (on versions compiled with `+clipboard`)
-set cursorline " Highlight current line
+" set cursorline " Highlight current line
 " set cursorlineopt=screenline
 set tabstop=4 " Make tabs as wide as two spaces
 set hlsearch " Highlight searches
