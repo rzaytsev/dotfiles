@@ -350,6 +350,9 @@ au FileType ruby nnoremap <leader>r :wa<CR>:!clear; ruby %<CR>
 " autocmd BufNewFile,BufRead *.rb set ft=ruby
 
 " golang support
+au FileType go let g:indentLine_enabled=1
+au FileType go set expandtab shiftwidth=4 tabstop=4 softtabstop=4
+au FileType go set listchars=tab:•·,trail:•,extends:>,precedes:<
 
 au FileType taskpaper set listchars=tab:\ \ ,trail:•,extends:>,precedes:<
 
