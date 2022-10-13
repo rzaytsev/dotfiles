@@ -88,6 +88,7 @@ Plug 'dbridges/vim-markdown-runner'
 " Plug 'roxma/nvim-yarp'
 " Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'itchyny/lightline.vim'
+Plug 'wikitopian/hardmode'
 
 call plug#end()
 
@@ -142,7 +143,9 @@ let g:lightline = {
 
 
 " NerdTree
-noremap <Leader>n :NERDTreeFind<cr>
+noremap <Leader>N :NERDTreeFind<cr>
+noremap <Leader>n :NERDTreeToggle<cr>
+
 let NERDTreeShowHidden=1
 
 " IndentLine
@@ -173,16 +176,26 @@ vnoremap > >gv
 nnoremap n nzz
 nnoremap N Nzz
 
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+
 nnoremap <Tab> :Buffers<CR>
 " CoC
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
+
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" " <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -270,15 +283,19 @@ command! -bang -nargs=? -complete=dir FFiles
 command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
 
+""
+"let g:HardMode_level = 'wannabe'
+"let g:HardMode_hardmodeMsg = 'Don`t use this!'
+"autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
 
 inoremap <C-e> <C-o>$
 inoremap <C-a> <C-o>0
 cnoremap <C-a>  <Home>
 cnoremap <C-e>  <End>
 
-inoremap jj <ESC>l
-inoremap оо <ESC>l
-inoremap jk <ESC>l
+" inoremap jj <ESC>l
+" inoremap оо <ESC>l
+" inoremap jk <ESC>l
 
 cmap w! w !sudo tee % >/dev/null
 
@@ -287,14 +304,16 @@ cmap w! w !sudo tee % >/dev/null
 autocmd BufWritePre * :%s/\s\+$//e
 match Error /\s\+$/
 
-nnoremap <C-j> <C-d>
-nnoremap <C-k> <C-u>
+nnoremap <C-j> <C-d>zz
+nnoremap <C-k> <C-u>zz
 
 nmap j gj
 nmap k gk
 nmap <S-i> i_<Esc>r
 nmap <S-C> <Plug>CommentaryLine
 nmap <Leader>P :set paste!<CR>
+
+set rnu
 nnoremap <leader>l :exec &nu==&rnu? "se nu!" : "se rnu!"<CR>
 " nmap <silent> <leader>ev :e ~/.vimrc<CR>
 " nmap <silent> <leader>sv :so ~/.vimrc<CR>
@@ -315,6 +334,7 @@ augroup CLNRSet
     autocmd! ColorScheme * hi CursorLineNR cterm=bold
 augroup END
 
+highlight LineNr ctermfg=244
 
 " https://github.com/vim/vim/blob/master/runtime/doc/russian.txt
 " Enable hotkeys for Russian layout
@@ -370,8 +390,8 @@ autocmd FileType markdown nnoremap <buffer> <Leader>R :MarkdownRunnerInsert<CR>
 au FileType markdown nmap <Leader>gte :r!~/.scripts/get_today_events.sh +\%c<CR>
 au FileType markdown set suffixesadd=.md
 
-let g:vim_markdown_new_list_item_indent = 2
-let g:vim_markdown_no_extensions_in_markdown = 1
+" let g:vim_markdown_new_list_item_indent = 2
+" let g:vim_markdown_no_extensions_in_markdown = 1
 
 
 " python support
