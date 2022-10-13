@@ -1,0 +1,95 @@
+[user]
+    name = Roman Zaytsev
+    email = rzaytsev@aligntech.com
+
+
+[includeIf "gitdir:~/code"]
+    path = ~/.gitconfig-personal
+
+[includeIf "gitdir:~/work"]
+    path = ~/.gitconfig-align
+
+
+[alias]
+    log = log --graph --all --decorate --stat --date=iso
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    today = log --since=midnight --author='Roman Zaytsev' --oneline
+    yesterday = !git log --graph --all --since=\"yesterday.midnight\" --until=\"midnight\" --author=\"$(git config user.name)\" --oneline
+    pulled = log -p --reverse --no-merges --stat @{1}..
+    p = pull --stat --rebase --no-ff
+    st = status
+    c = commit
+    br = branch
+    co = checkout
+    d = diff --ignore-space-at-eol --break-rewrites --ignore-all-space --ignore-blank-lines
+    dc = diff --cached
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    ls = ls-files
+    undo = reset --soft HEAD^
+    ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
+    stash-all = stash save --include-untracked
+    prune = fetch --prune
+    sw = !git checkout $(git branch -a --format '%(refname:short)' | sed 's~origin/~~' | sort | uniq | fzf)
+
+    up = pull --rebase --prune
+    cob = checkout -b
+    cm = !git add -A && git commit -m
+    recent = branch --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\"
+
+
+[color]
+    ui = true
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    commit = yellow bold
+    whitespace = red reverse
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[diff]
+    tool = icdiff
+	external = difft
+
+[difftool "icdiff"]
+    cmd = icdiff $LOCAL $REMOTE
+
+[merge]
+    ff = only
+    conflictstyle = diff3
+
+[push]
+    default = simple
+    followTags = true
+
+[status]
+    showUntrackedFiles = all
+[core]
+    excludesfile = /Users/rzaytsev/.gitignore_global
+    pager = diff-so-fancy | less --tabs=4 -RX
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[diff-so-fancy]
+    markEmptyLines = false
+[filter "lfs"]
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+[init]
+	defaultBranch = main
