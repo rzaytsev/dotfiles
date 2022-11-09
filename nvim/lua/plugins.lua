@@ -10,28 +10,6 @@ return require('packer').startup({
     use { 'tpope/vim-sensible' }
     -- use 'mhinz/vim-startify'
     use 'tpope/vim-repeat'
-    -- use {
-    --   'kyazdani42/nvim-tree.lua',
-    --   requires = {
-    --     'kyazdani42/nvim-web-devicons', -- optional, for file icon
-    --   },
-    --   config = function() require('nvim-tree').setup {} end
-    -- }   use 'b0o/schemastore.nvim'
-    -- use {
-    --   'feline-nvim/feline.nvim',
-    --   after = "nvim-web-devicons",
-    --   config = function()
-    --     require('feline').setup({
-    --       -- preset = 'noicon'
-    --     })
-    --   end
-    -- }
-    -- use 'preservim/vim-markdown'
-    -- use {
-    --   'iamcco/markdown-preview.nvim',
-    --   run = 'mkdp#util#install()'
-    -- }
-    -- https://github.com/gelguy/wilder.nvim
     use {
       'Pocco81/AutoSave.nvim',
       config = function ()
@@ -42,35 +20,6 @@ return require('packer').startup({
 
     use { 'ntpeters/vim-better-whitespace' }
 
-    -- use({
-    --   "iamcco/markdown-preview.nvim",
-    --   run = function() vim.fn["mkdp#util#install"]() end,
-    -- })
-    use {
-      "danymat/neogen",
-      config = function()
-        require('neogen').setup {}
-      end,
-      requires = "nvim-treesitter/nvim-treesitter",
-    }
-
-    -- use {
-    --   'windwp/nvim-autopairs',
-    --   requires = {
-    --     'hrsh7th/nvim-cmp',
-    --     'nvim-treesitter/nvim-treesitter',
-    --   },
-    --   config = function()
-    --     local npairs = require('nvim-autopairs')
-    --     npairs.setup({
-    --       -- check_ts = true
-    --     })
-    --     npairs.add_rules(require('nvim-autopairs.rules.endwise-ruby'))
-    --     npairs.add_rules(require('nvim-autopairs.rules.endwise-elixir'))
-    --     npairs.add_rules(require('nvim-autopairs.rules.endwise-lua'))
-    --   end
-    -- }
-    -- use 'tpope/vim-sleuth'
     use { 'NMAC427/guess-indent.nvim',
       config = function() require('guess-indent').setup {} end,
     }
@@ -84,31 +33,8 @@ return require('packer').startup({
       end
     }
 
-    -- use {
-    --   'jose-elias-alvarez/null-ls.nvim',
-    --   config = function()
-    --     local ls = require('null-ls')
-    --     -- https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md
-    --     ls.setup({
-    --       sources = {
-    --         ls.builtins.formatting.stylua,
-    --         ls.builtins.formatting.gofmt,
-    --         ls.builtins.formatting.prettierd,
-    --         ls.builtins.formatting.terraform_fmt,
-    --         ls.builtins.formatting.uncrustify,
-    --         -- ls.builtins.formatting.hadolint,
-    --       },
-    --     })
-    --   end
-    -- }
-    -- use 'glepnir/dashboard-nvim'
     use 'tpope/vim-surround'
     use 'windwp/nvim-spectre'
-    use 'dyng/ctrlsf.vim'
-    use {
-      'marko-cerovac/material.nvim',
-    }
-
     use { 'tpope/vim-unimpaired' }
 
     use {
@@ -191,8 +117,6 @@ return require('packer').startup({
     use 'plasticboy/vim-markdown'
     use 'junegunn/rainbow_parentheses.vim'
 
-
-    require('plugins.treesitter').run(use)
     require('plugins.lsp').run(use)
 
   end,
