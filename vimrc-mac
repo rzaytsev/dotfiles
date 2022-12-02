@@ -7,7 +7,7 @@ set ruler               " show the cursor position
 set hlsearch            " highlight the last searched term
 set nocompatible        " Make Vim more useful
 set clipboard=unnamed,autoselect " Use the OS clipboard by default (on versions compiled with `+clipboard`)
-" set cursorline        " Highlight current line
+set cursorline        " Highlight current line
 set hlsearch            " Highlight searches
 set ignorecase          " Ignore case of searches
 set incsearch           " Highlight dynamically as pattern is typed
@@ -45,6 +45,8 @@ set shortmess+=c
 set splitbelow
 set splitright
 set formatoptions+=j
+
+set updatetime=300
 
 " set relativenumber
 set number
@@ -94,37 +96,37 @@ let mapleader="\<Space>"
 
 " Vista
 let g:vista_executive_for = {
-  \ 'tf': 'coc',
-  \ 'terraform': 'coc',
-  \ }
+      \ 'tf': 'coc',
+      \ 'terraform': 'coc',
+      \ }
 " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
 let g:vista#renderer#enable_icon = 1
 
 " The default icons can't be suitable for all the filetypes, you can extend it as you wish.
 let g:vista#renderer#icons = {
-\   "function": "\uf794",
-\   "variable": "\uf71b",
-\  }
+      \   "function": "\uf794",
+      \   "variable": "\uf71b",
+      \  }
 
 " lightline
 set noshowmode
 
 let g:lightline = {
-    \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'wombat',
       \ 'mode_map': {
-        \ 'n' : 'N',
-        \ 'i' : 'I',
-        \ 'R' : 'R',
-        \ 'v' : 'V',
-        \ 'V' : 'VL',
-        \ "\<C-v>": 'VB',
-        \ 'c' : 'C',
-        \ 's' : 'S',
-        \ 'S' : 'SL',
-        \ "\<C-s>": 'SB',
-        \ 't': 'T',
-        \ },
- \ 'active': {
+      \ 'n' : 'N',
+      \ 'i' : 'I',
+      \ 'R' : 'R',
+      \ 'v' : 'V',
+      \ 'V' : 'VL',
+      \ "\<C-v>": 'VB',
+      \ 'c' : 'C',
+      \ 's' : 'S',
+      \ 'S' : 'SL',
+      \ "\<C-s>": 'SB',
+      \ 't': 'T',
+      \ },
+      \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
@@ -132,7 +134,6 @@ let g:lightline = {
       \   'gitbranch': 'FugitiveHead'
       \ },
       \ }
-
 
 
 " NerdTree
@@ -188,11 +189,10 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " " <C-g>u breaks current undo, please make your own choice.
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+      \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -222,61 +222,61 @@ nmap <Leader>\ :Lines<CR>
 noremap <leader>f :Autoformat<CR>
 
 function! ContextualFZF()
-    " Determine if inside a git repo
-    silent exec "!git rev-parse --show-toplevel"
-    redraw!
+  " Determine if inside a git repo
+  silent exec "!git rev-parse --show-toplevel"
+  redraw!
 
-    let command = 'fd --type f --hidden --exclude .git .'
+  let command = 'fd --type f --hidden --exclude .git .'
 
-    if v:shell_error
-        " Search in current directory
-        call fzf#run({
-              \'source': command,
-              \'sink': 'e',
-              \'down': '50%',
-        \})
-    else
-        " Search in entire git repo
-        call fzf#run({
-              \'source': command,
-              \'sink': 'e',
-              \'down': '50%',
-              \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
-        \})
-    endif
+  if v:shell_error
+    " Search in current directory
+    call fzf#run({
+          \'source': command,
+          \'sink': 'e',
+          \'down': '50%',
+          \})
+  else
+    " Search in entire git repo
+    call fzf#run({
+          \'source': command,
+          \'sink': 'e',
+          \'down': '50%',
+          \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
+          \})
+  endif
 endfunction
 nnoremap <Leader>e :call ContextualFZF()<CR>
 
 function! s:append_dir_with_fzf(line)
   call fzf#run(fzf#wrap({
-    \ 'options': ['--prompt', a:line.'> '],
-    \ 'source': 'find . -type d',
-    \ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+        \ 'options': ['--prompt', a:line.'> '],
+        \ 'source': 'find . -type d',
+        \ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
   return ''
 endfunction
 
 cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
 
 command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
-  \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
-  \  'sink': 'cd'}))
+      \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
+      \  'sink': 'cd'}))
 
 
 command! -bang -nargs=? -complete=dir PFiles
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:90%'), <bang>0)
+      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:90%'), <bang>0)
 
 
 let g:pathToTemplates='~/.vim/snippets/'
 function! GoSink(file)
-    execute ':0r '.g:pathToTemplates.a:file
+  execute ':0r '.g:pathToTemplates.a:file
 endfunction
 
 command! Go call fzf#run({
-    \  'source': 'ls '.g:pathToTemplates,
-    \  'sink':    function('GoSink')})
+      \  'source': 'ls '.g:pathToTemplates,
+      \  'sink':    function('GoSink')})
 
 command! -bang -nargs=? -complete=dir FFiles
-    \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
+      \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
 
 
 command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
@@ -327,7 +327,7 @@ set signcolumn=yes
 
 hi CursorLineNR cterm=bold
 augroup CLNRSet
-    autocmd! ColorScheme * hi CursorLineNR cterm=bold
+  autocmd! ColorScheme * hi CursorLineNR cterm=bold
 augroup END
 
 highlight LineNr ctermfg=244
@@ -401,13 +401,13 @@ au FileType python nmap <silent><Leader>tf <Esc>:Pytest function<CR>
 au FileType python nmap <silent><Leader>tc <Esc>:Pytest class<CR>
 au FileType python nmap <silent><Leader>tp <Esc>:Pytest project<CR>
 autocmd FileType python iabbrev start #!/usr/bin/env python3
-                                    \<CR><CR>
-                                    \def main():<CR>
-                                    \<esc>0i   xxx<CR>
-                                    \<CR><CR>
-                                    \<esc>0iif __name__ == "__main__":<CR>
-                                    \main()
-                                    \<Esc>?xxx<CR>cw
+      \<CR><CR>
+      \def main():<CR>
+      \<esc>0i   xxx<CR>
+      \<CR><CR>
+      \<esc>0iif __name__ == "__main__":<CR>
+      \main()
+      \<Esc>?xxx<CR>cw
 
 " C support
 autocmd FileType c set expandtab shiftwidth=4 tabstop=8
@@ -460,80 +460,80 @@ au Filetype clojure nmap <leader>ck :Require<cr>
 "JS
 augroup filetype javascript syntax=javascript
 
-" rainbow_parentheses
-let g:rainbow#blacklist = [233, 234, 9 ,160]
-augroup rainbow_code
-  autocmd!
-  autocmd FileType lisp,clojure,scheme,python,ruby,go,json RainbowParentheses
-augroup END
+  " rainbow_parentheses
+  let g:rainbow#blacklist = [233, 234, 9 ,160]
+  augroup rainbow_code
+    autocmd!
+    autocmd FileType lisp,clojure,scheme,python,ruby,go,json RainbowParentheses
+  augroup END
 
 
-autocmd Filetype gitcommit setlocal spell
+  autocmd Filetype gitcommit setlocal spell
 
 
-match ErrorMsg '\%>120v.\+'
-match ErrorMsg '\s\+$'
+  match ErrorMsg '\%>120v.\+'
+  match ErrorMsg '\s\+$'
 
-fu! ToggleCB()
-	let line = getline('.')
+  fu! ToggleCB()
+    let line = getline('.')
 
-	if(match(line, "\\[ \\]") != -1)
-		let line = substitute(line, "\\[ \\]", "[x]", "")
-	elseif(match(line, "\\[x\\]") != -1)
-		let line = substitute(line, "\\[x\\]", "[ ]", "")
-	elseif(match(line, "\\[+\\]") != -1)
-		let line = substitute(line, "\\[+\\]", "[ ]", "")
-        else
-                let line = substitute(line, "-", "" , "")
-                let line = "- [ ] " . line
-	endif
+    if(match(line, "\\[ \\]") != -1)
+      let line = substitute(line, "\\[ \\]", "[x]", "")
+    elseif(match(line, "\\[x\\]") != -1)
+      let line = substitute(line, "\\[x\\]", "[ ]", "")
+    elseif(match(line, "\\[+\\]") != -1)
+      let line = substitute(line, "\\[+\\]", "[ ]", "")
+    else
+      let line = substitute(line, "-", "" , "")
+      let line = "- [ ] " . line
+    endif
 
-	call setline('.', line)
-endf
-command! ToggleCB call ToggleCB()
-map <silent> <leader>- :ToggleCB<cr>
+    call setline('.', line)
+  endf
+  command! ToggleCB call ToggleCB()
+  map <silent> <leader>- :ToggleCB<cr>
 
-iabbrev <expr> ddd strftime('%Y-%m-%d %a')
-iabbrev <expr> DDD strftime("# %c")
+  iabbrev <expr> ddd strftime('%Y-%m-%d %a')
+  iabbrev <expr> DDD strftime("# %c")
 
-function! ToggleMovement(firstOp, thenOp)
-  let pos = getpos('.')
-  execute "normal! " . a:firstOp
-  if pos == getpos('.')
-    execute "normal! " . a:thenOp
-  endif
-endfunction
+  function! ToggleMovement(firstOp, thenOp)
+    let pos = getpos('.')
+    execute "normal! " . a:firstOp
+    if pos == getpos('.')
+      execute "normal! " . a:thenOp
+    endif
+  endfunction
 
-nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
-
-
-function! Twf()
-  let temp = tempname()
-  execute 'silent ! twf ' . @% . ' > ' . temp
-  redraw!
-  try
-    let out = filereadable(temp) ? readfile(temp) : []
-  finally
-    silent! call delete(temp)
-  endtry
-  if !empty(out)
-    execute 'edit! ' . out[0]
-  endif
-endfunction
-
-nnoremap <silent> <Space>3 :call Twf()<CR>
-
-" calc
-ino <C-X> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
+  nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
 
 
-au FileType markdown highlight TAGS ctermfg=yellow
-au FileType markdown call matchadd("TAGS", '#\w\+')
+  function! Twf()
+    let temp = tempname()
+    execute 'silent ! twf ' . @% . ' > ' . temp
+    redraw!
+    try
+      let out = filereadable(temp) ? readfile(temp) : []
+    finally
+      silent! call delete(temp)
+    endtry
+    if !empty(out)
+      execute 'edit! ' . out[0]
+    endif
+  endfunction
 
-au FileType markdown highlight CONTEXT ctermfg=blue
-au FileType markdown call matchadd("CONTEXT", '@\a\+')
+  nnoremap <silent> <Space>3 :call Twf()<CR>
 
-au FileType markdown highlight TODO ctermfg=LightMagenta
-au FileType markdown call matchadd("TODO", 'TODO\S*')
+  " calc
+  ino <C-X> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
+
+
+  au FileType markdown highlight TAGS ctermfg=yellow
+  au FileType markdown call matchadd("TAGS", '#\w\+')
+
+  au FileType markdown highlight CONTEXT ctermfg=blue
+  au FileType markdown call matchadd("CONTEXT", '@\a\+')
+
+  au FileType markdown highlight TODO ctermfg=LightMagenta
+  au FileType markdown call matchadd("TODO", 'TODO\S*')
 
 
