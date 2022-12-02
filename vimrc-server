@@ -92,7 +92,7 @@ filetype plugin indent on      " use the file type plugins
 let mapleader="\<Space>"
 
 " NerdTree
-noremap <Leader>N :NERDTreeFind<cr>
+noremap <Leader><Leader> :NERDTreeToggle<cr>
 let NERDTreeShowHidden=1
 
 

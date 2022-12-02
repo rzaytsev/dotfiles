@@ -47,7 +47,7 @@ setw -g mode-keys vi
 bind-key -T edit-mode-vi Up send-keys -X history-up
 bind-key -T edit-mode-vi Down send-keys -X history-down
 unbind-key -T copy-mode-vi Space     ;   bind-key -T copy-mode-vi v send-keys -X begin-selection
-unbind-key -T copy-mode-vi Enter     ;   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+# unbind-key -T copy-mode-vi Enter     ;   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
 unbind-key -T copy-mode-vi C-v       ;   bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
 unbind-key -T copy-mode-vi [         ;   bind-key -T copy-mode-vi [ send-keys -X begin-selection
 unbind-key -T copy-mode-vi ]         ;   bind-key -T copy-mode-vi ] send-keys -X copy-selection
@@ -97,7 +97,7 @@ bind -n M-Right select-pane -R
 bind -n M-Up select-pane -U
 bind -n M-Down select-pane -D
 
-set -g status-position "top"
+set -g status-position "bottom"
 set -g focus-events on
 
 set -g status-bg "colour236"
@@ -114,19 +114,19 @@ setw -g window-status-current-format '#[fg=colour236,bg=colour240,nobold,nounder
 
 set-option -g status-interval 1
 
-setw -g window-status-bell-attr bold
-setw -g window-status-bell-fg colour255
-setw -g window-status-bell-bg colour1
+# setw -g window-status-bell-attr bold
+# setw -g window-status-bell-fg colour255
+# setw -g window-status-bell-bg colour1
 
 
 #  modes
 # List of plugins
 # see this https://github.com/tmux-plugins/tpm to installation
-set -g @plugin 'tmux-plugins/tpm'
+# set -g @plugin 'tmux-plugins/tpm'
 # set -g @plugin 'tmux-plugins/tmux-sensible'
 # set -g @plugin 'tmux-plugins/tmux-yank'
 # set -g @plugin 'tmux-plugins/tmux-open'
-set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+# set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 # set -g @plugin 'wfxr/tmux-fzf-url'
 # set -g @plugin 'arcticicestudio/nord-tmux'
 
@@ -136,5 +136,5 @@ set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 # set -g @plugin 'christoomey/vim-tmux-navigator'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run '~/.tmux/plugins/tpm/tpm'
+# run '~/.tmux/plugins/tpm/tpm'
 

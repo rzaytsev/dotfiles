@@ -1,6 +1,6 @@
 alias links="grep -i http ~/notes/*.md | fzf -e |  sed -rn 's@^.*\[(.*)\]\((.*)/.*$@\1 \2@p'"
 alias todos="ack --no-group '(- [ ]) (.*)' --output=' $1 $2'"
-alias ll="exa --long --git --all"
+alias ll="exa --long --all"
 
 alias ptp="python3 -m ptpython"
 
