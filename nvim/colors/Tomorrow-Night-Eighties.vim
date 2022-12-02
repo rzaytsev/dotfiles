@@ -5,18 +5,21 @@
 
 " Default GUI Colours
 let s:foreground = "cccccc"
-let s:background = "2d2d2d"
+" let s:background = "2d2d2d"
+let s:background = "3b3b3b"
 let s:selection = "515151"
 let s:line = "393939"
 let s:comment = "999999"
 let s:red = "f2777a"
 let s:orange = "f99157"
 let s:yellow = "ffcc66"
+" let s:green = "99cc99"
 let s:green = "99cc99"
 " let s:aqua = "66cccc"
 let s:aqua = "00d7af"
 " let s:blue = "6699cc"
-let s:blue = "87ADDE"
+" let s:blue = "87ADDE"
+let s:blue = "00ccff"
 let s:purple = "cc99cc"
 let s:window = "4d5057"
 

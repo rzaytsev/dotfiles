@@ -1,0 +1,48 @@
+{
+  "languageserver": {
+        "golang": {
+                "command": "gopls",
+                "rootPatterns": ["go.mod"],
+                "filetypes": ["go"]
+              },
+        "terraform": {
+                "command": "terraform-ls",
+                "args": ["serve"],
+                "filetypes": [
+                          "terraform",
+                          "tf"
+                        ],
+                "initializationOptions": {},
+                "settings": {}
+              }
+    },
+
+  "yaml.schemas": {
+    },
+
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "cSpell.enabled": false,
+
+"markdownlint.config":{
+
+    "default": true,
+    "blank_lines": false,
+    "bullet": false,
+    "links": false,
+    "MD003": { "style": "atx" },
+    "MD007": false,
+    "MD013": false,
+    "MD029": false,
+    "MD046": {"style":"fenced"},
+    "no-hard-tabs": false
+},
+
+"git.enableGutters": false
+
+}
+
+
+
+
