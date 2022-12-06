@@ -1,6 +1,7 @@
 vim/undodir/*
 vim/view/*
 vim/plugged/*
+nvim/plugged/*
 
 ### macOS ###
 *.DS_Store
