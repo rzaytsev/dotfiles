@@ -51,7 +51,7 @@ set formatoptions+=j
 
 set updatetime=300
 set mouse=
-set termguicolors
+" set termguicolors
 
 set clipboard=unnamed
 
@@ -95,7 +95,6 @@ Plug 'dbridges/vim-markdown-runner'
 Plug 'itchyny/lightline.vim'
 Plug 'wikitopian/hardmode'
 Plug 'vim-autoformat/vim-autoformat'
-
 
 
 Plug 'nvim-tree/nvim-web-devicons'
@@ -223,6 +222,7 @@ nmap <leader>h :History<CR>
 nmap <leader>H :History!<CR>
 nmap <leader>a :Rg<CR>
 nmap <leader>A :Rg!<CR>
+nmap <leader>3 :Files<CR>
 
 nmap <leader>0 :Vista finder<CR>
 nmap <leader>V :Vista!!<CR>
@@ -524,22 +524,6 @@ augroup filetype javascript syntax=javascript
   nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
 
 
-  function! Twf()
-    let temp = tempname()
-    execute 'silent ! twf ' . @% . ' > ' . temp
-    redraw!
-    try
-      let out = filereadable(temp) ? readfile(temp) : []
-    finally
-      silent! call delete(temp)
-    endtry
-    if !empty(out)
-      execute 'edit! ' . out[0]
-    endif
-  endfunction
-
-  nnoremap <silent> <Space>3 :call Twf()<CR>
-
   " calc
   ino <C-X> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
 
@@ -578,9 +562,9 @@ require("nvim-tree").setup({
 
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "bash", "diff", "dockerfile", "gitcommit", "gitignore",
+  ensure_installed = { "bash", "diff", "dockerfile", "gitcommit",
   "go", "gomod", "hcl", "html", "javascript", "json", "lua", "make", "markdown",
-  "markdown_inline", "python", "regex", "sql", "toml", "yaml" },
+  "markdown_inline", "python", "regex", "toml", "yaml" },
   sync_install = false,
   auto_install = true,
 

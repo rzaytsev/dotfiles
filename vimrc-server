@@ -140,7 +140,7 @@ inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice.
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+      \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! CheckBackspace() abort
   let col = col('.') - 1
@@ -159,6 +159,8 @@ nmap <leader>H :History!<CR>
 nmap <leader>a :Rg<CR>
 nmap <leader>A :Rg!<CR>
 
+nmap <leader>s :Files<CR>
+
 nmap <leader>t :Vista finder<CR>
 nmap <leader>V :Vista!!<CR>
 nmap <leader>T :BTags<CR>
@@ -170,61 +172,62 @@ nmap <Leader>\ :Lines<CR>
 " nmap <Leader>T :Tags<CR>
 
 function! ContextualFZF()
-    " Determine if inside a git repo
-    silent exec "!git rev-parse --show-toplevel"
-    redraw!
+  " Determine if inside a git repo
+  silent exec "!git rev-parse --show-toplevel"
+  redraw!
 
-    let command = 'fd --type f --hidden --exclude .git .'
+  let command = 'fd --type f --hidden --color auto --exclude .git .'
 
-    if v:shell_error
-        " Search in current directory
-        call fzf#run({
-              \'source': command,
-              \'sink': 'e',
-              \'down': '50%',
-        \})
-    else
-        " Search in entire git repo
-        call fzf#run({
-              \'source': command,
-              \'sink': 'e',
-              \'down': '50%',
-              \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
-        \})
-    endif
+  if v:shell_error
+    " Search in current directory
+    call fzf#run({
+          \'source': command,
+          \'sink': 'e',
+          \'down': '50%',
+          \})
+  else
+    " Search in entire git repo
+    call fzf#run({
+          \'source': command,
+          \'sink': 'e',
+          \'down': '50%',
+          \'dir':  substitute(system('git rev-parse --show-toplevel'), '\n\+$', '', ''),
+          \})
+  endif
 endfunction
 nnoremap <Leader>e :call ContextualFZF()<CR>
 
+
 function! s:append_dir_with_fzf(line)
   call fzf#run(fzf#wrap({
-    \ 'options': ['--prompt', a:line.'> '],
-    \ 'source': 'find . -type d',
-    \ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
+        \ 'options': ['--prompt', a:line.'> '],
+        \ 'source': 'fd . --type d',
+        \ 'sink': {line -> feedkeys("\<esc>:".a:line.line, 'n')}}))
   return ''
 endfunction
 
 cnoremap <expr> <c-x><c-d> <sid>append_dir_with_fzf(getcmdline())
 
 command! -nargs=* -complete=dir Cd call fzf#run(fzf#wrap(
-  \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
-  \  'sink': 'cd'}))
+      \ {'source': 'find '.(empty(<f-args>) ? '.' : <f-args>).' -type d',
+      \  'sink': 'cd'}))
 
 
 command! -bang -nargs=? -complete=dir PFiles
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:90%'), <bang>0)
+      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:90%'), <bang>0)
 
 
 let g:pathToTemplates='~/.vim/snippets/'
 function! GoSink(file)
-    execute ':0r '.g:pathToTemplates.a:file
+  execute ':0r '.g:pathToTemplates.a:file
 endfunction
 
 command! Go call fzf#run({
-    \  'source': 'ls '.g:pathToTemplates,
-    \  'sink':    function('GoSink')})
+      \  'source': 'ls '.g:pathToTemplates,
+      \  'sink':    function('GoSink')})
 
 command! -bang -nargs=? -complete=dir FFiles
-    \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
+      \ call fzf#vim#files(<q-args>, {'options': '-q '.shellescape(expand('<cexpr>'))})
 
 
 command! -bang -nargs=* Find call fzf#vim#grep( 'rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --color "always" '.shellescape(<q-args>), 1, <bang>0)
@@ -272,7 +275,7 @@ set signcolumn=yes
 
 hi CursorLineNR cterm=bold
 augroup CLNRSet
-    autocmd! ColorScheme * hi CursorLineNR cterm=bold
+  autocmd! ColorScheme * hi CursorLineNR cterm=bold
 augroup END
 
 
@@ -341,13 +344,13 @@ au FileType python nmap <silent><Leader>tf <Esc>:Pytest function<CR>
 au FileType python nmap <silent><Leader>tc <Esc>:Pytest class<CR>
 au FileType python nmap <silent><Leader>tp <Esc>:Pytest project<CR>
 autocmd FileType python iabbrev start #!/usr/bin/env python3
-                                    \<CR><CR>
-                                    \def main():<CR>
-                                    \<esc>0i   xxx<CR>
-                                    \<CR><CR>
-                                    \<esc>0iif __name__ == "__main__":<CR>
-                                    \main()
-                                    \<Esc>?xxx<CR>cw
+      \<CR><CR>
+      \def main():<CR>
+      \<esc>0i   xxx<CR>
+      \<CR><CR>
+      \<esc>0iif __name__ == "__main__":<CR>
+      \main()
+      \<Esc>?xxx<CR>cw
 
 " C support
 autocmd FileType c set expandtab shiftwidth=4 tabstop=8
@@ -395,87 +398,87 @@ au Filetype clojure nmap <leader>ck :Require<cr>
 "JS
 augroup filetype javascript syntax=javascript
 
-" rainbow_parentheses
-let g:rainbow#blacklist = [233, 234, 9 ,160]
-augroup rainbow_code
-  autocmd!
-  autocmd FileType lisp,clojure,scheme,python,ruby,go,json RainbowParentheses
-augroup END
+  " rainbow_parentheses
+  let g:rainbow#blacklist = [233, 234, 9 ,160]
+  augroup rainbow_code
+    autocmd!
+    autocmd FileType lisp,clojure,scheme,python,ruby,go,json RainbowParentheses
+  augroup END
 
 
-autocmd Filetype gitcommit setlocal spell
+  autocmd Filetype gitcommit setlocal spell
 
 
-match ErrorMsg '\%>120v.\+'
-match ErrorMsg '\s\+$'
+  match ErrorMsg '\%>120v.\+'
+  match ErrorMsg '\s\+$'
 
-fu! ToggleCB()
-	let line = getline('.')
+  fu! ToggleCB()
+    let line = getline('.')
 
-	if(match(line, "\\[ \\]") != -1)
-		let line = substitute(line, "\\[ \\]", "[x]", "")
-	elseif(match(line, "\\[x\\]") != -1)
-		let line = substitute(line, "\\[x\\]", "[ ]", "")
-	elseif(match(line, "\\[+\\]") != -1)
-		let line = substitute(line, "\\[+\\]", "[ ]", "")
-        else
-                let line = substitute(line, "-", "" , "")
-                let line = "- [ ] " . line
-	endif
+    if(match(line, "\\[ \\]") != -1)
+      let line = substitute(line, "\\[ \\]", "[x]", "")
+    elseif(match(line, "\\[x\\]") != -1)
+      let line = substitute(line, "\\[x\\]", "[ ]", "")
+    elseif(match(line, "\\[+\\]") != -1)
+      let line = substitute(line, "\\[+\\]", "[ ]", "")
+    else
+      let line = substitute(line, "-", "" , "")
+      let line = "- [ ] " . line
+    endif
 
-	call setline('.', line)
-endf
-command! ToggleCB call ToggleCB()
-map <silent> <leader>- :ToggleCB<cr>
+    call setline('.', line)
+    endf
+    command! ToggleCB call ToggleCB()
+    map <silent> <leader>- :ToggleCB<cr>
 
-iabbrev <expr> ddd strftime('%d-%m-%Y')
-:iab <expr> DDD strftime("# %c")
-
-
-function! ToggleMovement(firstOp, thenOp)
-  let pos = getpos('.')
-  execute "normal! " . a:firstOp
-  if pos == getpos('.')
-    execute "normal! " . a:thenOp
-  endif
-endfunction
-
-nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
+    iabbrev <expr> ddd strftime('%d-%m-%Y')
+    :iab <expr> DDD strftime("# %c")
 
 
-" let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-" let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-" let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    function! ToggleMovement(firstOp, thenOp)
+      let pos = getpos('.')
+      execute "normal! " . a:firstOp
+      if pos == getpos('.')
+        execute "normal! " . a:thenOp
+      endif
+    endfunction
+
+    nnoremap <silent> 0 :call ToggleMovement('^', '0')<CR>
 
 
-" hi User1 ctermfg=yellow ctermbg=454545
-" hi User2 ctermfg=yellow ctermbg=454545
-" hi User3 ctermfg=yellow ctermbg=454545
-" hi User4 ctermfg=yellow ctermbg=454545
-" hi User5 ctermfg=yellow ctermbg=454545
+    " let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    " let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+    " let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 
-" set statusline=
-" set statusline +=%1*\ %n\ %*            "buffer number
-" " set statusline +=%5*%{&ff}%*            "file format
-" set statusline +=%3*%y%*                "file type
-" set statusline +=%4*\ %<%F%*            "full path
-" set statusline +=%2*%m%*                "modified flag
-" set statusline +=%1*%=%5l%*             "current line
-" set statusline +=%2*/%L%*               "total lines
-" set statusline +=%1*%4v\ %*             "virtual column number
-" " set statusline +=%2*0x%04B\ %*          "character under cursor
 
-" Specify an alternate shell command for a certain language
-" let g:markdown_runners['python'] = 'python3'
+    " hi User1 ctermfg=yellow ctermbg=454545
+    " hi User2 ctermfg=yellow ctermbg=454545
+    " hi User3 ctermfg=yellow ctermbg=454545
+    " hi User4 ctermfg=yellow ctermbg=454545
+    " hi User5 ctermfg=yellow ctermbg=454545
 
-" Specify your own Vim script function for further customization.
-" The function should receive a list of strings, representing the contents of
-" the code block, and return a single string with the results.
-" function! MyHtmlRunner(src)
-"   " ... your custom processing
-"   return "Results"
-" endfunction
+    " set statusline=
+    " set statusline +=%1*\ %n\ %*            "buffer number
+    " " set statusline +=%5*%{&ff}%*            "file format
+    " set statusline +=%3*%y%*                "file type
+    " set statusline +=%4*\ %<%F%*            "full path
+    " set statusline +=%2*%m%*                "modified flag
+    " set statusline +=%1*%=%5l%*             "current line
+    " set statusline +=%2*/%L%*               "total lines
+    " set statusline +=%1*%4v\ %*             "virtual column number
+    " " set statusline +=%2*0x%04B\ %*          "character under cursor
 
-" let g:markdown_runners['html'] = function('MyHtmlRunner')
+    " Specify an alternate shell command for a certain language
+    " let g:markdown_runners['python'] = 'python3'
+
+    " Specify your own Vim script function for further customization.
+    " The function should receive a list of strings, representing the contents of
+    " the code block, and return a single string with the results.
+    " function! MyHtmlRunner(src)
+    "   " ... your custom processing
+    "   return "Results"
+    " endfunction
+
+    " let g:markdown_runners['html'] = function('MyHtmlRunner')
 
 

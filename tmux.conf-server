@@ -7,7 +7,7 @@ set -g prefix C-f
 bind C-f send-prefix
 
 # toogle last window by hitting again C-f
-bind-key C-f last-window
+# bind-key C-f last-window
 
 
 # Start windows and pane numbering with index 1 instead of 0
@@ -46,8 +46,13 @@ setw -g mode-keys vi
 # Select and copy with v and y, instead of default space and enter
 bind-key -T edit-mode-vi Up send-keys -X history-up
 bind-key -T edit-mode-vi Down send-keys -X history-down
+
+# bind-key -T copy-mode-vi v send -X begin-selection
+# bind-key -T copy-mode-vi V send -X select-line
+# bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+
 unbind-key -T copy-mode-vi Space     ;   bind-key -T copy-mode-vi v send-keys -X begin-selection
-# unbind-key -T copy-mode-vi Enter     ;   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+unbind-key -T copy-mode-vi Enter     ;   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
 unbind-key -T copy-mode-vi C-v       ;   bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
 unbind-key -T copy-mode-vi [         ;   bind-key -T copy-mode-vi [ send-keys -X begin-selection
 unbind-key -T copy-mode-vi ]         ;   bind-key -T copy-mode-vi ] send-keys -X copy-selection
@@ -60,7 +65,7 @@ set -g history-limit 1000000
 
 # Mouse mode on
 # set -g terminal-overrides 'xterm*:smcup@:rmcup@'
-set -g mouse on
+set -g mouse off
 
 # Set title
 set -g set-titles on
@@ -88,8 +93,8 @@ bind-key x kill-pane
 
 # Moving Windows
 # ctrl + arrow
-bind-key -n C-right next
-bind-key -n C-left prev
+bind-key right next
+bind-key left prev
 
 # switch panes using Alt-arrow without prefix
 bind -n M-Left select-pane -L
@@ -107,7 +112,7 @@ set -g status-left-length "100"
 set -g status "on"
 
 set -g status-left "#{prefix_highlight}#[fg=colour22,bg=colour148,bold] #S #[fg=colour148,bg=colour236,nobold,nounderscore,noitalics]"
-set -g status-right "#[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#[fg=colour250,bg=colour240] %a, %d %h | utc %H%M #[fg=colour252,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour241,bg=colour252]"
+set -g status-right "#[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#[fg=colour250,bg=colour240] #( echo $USER ) | utc %H%M #[fg=colour252,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour241,bg=colour252]"
 
 setw -g window-status-format '#[fg=colour245,bg=colour236] #I #[fg=colour245,bg=colour236]#(pwd="#{pane_current_path}"; echo ${pwd####*/})|#W '
 setw -g window-status-current-format '#[fg=colour236,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour231,bg=colour240] #I #[fg=colour231,bg=colour240]#(pwd="#{pane_current_path}"; echo ${pwd####*/})|#W #[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]'
