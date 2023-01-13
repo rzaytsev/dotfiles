@@ -14,3 +14,5 @@ alias vpn-on='launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangp
 
 alias start-tunnel='ssh -N -D 9191 -M -S ~/scw1-tnl -o "ExitOnForwardFailure yes" -fN scw1'
 alias stop-tunnel="ssh -S ~/scw1-tnl  -O exit scw1"
+
+vigo() { cd "$1"; nvim -c 'NvimTreeFocus'; cd -; }
