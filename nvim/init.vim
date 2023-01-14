@@ -90,12 +90,15 @@ Plug 'scrooloose/nerdtree'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'davidhalter/jedi-vim'
 Plug 'alfredodeza/pytest.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dbridges/vim-markdown-runner'
 Plug 'itchyny/lightline.vim'
 Plug 'wikitopian/hardmode'
 Plug 'vim-autoformat/vim-autoformat'
 
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
 
 Plug 'nvim-tree/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -107,6 +110,8 @@ filetype off
 filetype plugin indent on      " use the file type plugins
 
 let mapleader="\<Space>"
+
+let g:coq_settings = { 'auto_start': 'shut-up' }
 
 
 
@@ -197,21 +202,21 @@ nmap gp :bp<cr>
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1):
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+" inoremap <silent><expr> <TAB>
+"       \ coc#pum#visible() ? coc#pum#next(1):
+"       \ <SID>check_back_space() ? "\<Tab>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Make <CR> to accept selected completion item or notify coc.nvim to format
-" " <C-g>u breaks current undo, please make your own choice.
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-      \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" " Make <CR> to accept selected completion item or notify coc.nvim to format
+" " " <C-g>u breaks current undo, please make your own choice.
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+"       \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
 
 " FZF
@@ -387,11 +392,7 @@ let g:terraform_fmt_on_save = 0
 " markdown support
 let g:markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
 let g:vim_markdown_fenced_languages = ['js=json', 'rb=ruby', 'bash=sh', 'py=python', 'yaml']
-au Filetype markdown setlocal spell
-highlight htmlH1 guifg=#ffcc33 "gui=bold
-highlight mkdLink guifg=#00ccff
-highlight mkdURL guifg=LightGreen
-highlight mkdInlineURL guifg=#00ccff
+" au Filetype markdown setlocal spell
 au FileType markdown set conceallevel=2
 au FileType markdown set expandtab shiftwidth=2 tabstop=4
 let g:vim_markdown_folding_level = 99
@@ -400,6 +401,10 @@ autocmd FileType markdown nnoremap <buffer> <Leader>r :MarkdownRunner<CR>
 autocmd FileType markdown nnoremap <buffer> <Leader>R :MarkdownRunnerInsert<CR>
 au FileType markdown nmap <Leader>gte :r!~/.scripts/get_today_events.sh +\%c<CR>
 au FileType markdown set suffixesadd=.md
+highlight htmlH1 ctermfg=yellow
+highlight mkdLink ctermfg=blue
+highlight mkdURL ctermfg=green
+highlight mkdInlineURL ctermfg=green
 
 let g:vim_markdown_new_list_item_indent = 0
 " let g:vim_markdown_no_extensions_in_markdown = 1
@@ -528,16 +533,6 @@ augroup filetype javascript syntax=javascript
   ino <C-X> <C-O>yiW<End>=<C-R>=<C-R>0<CR>
 
 
-  au FileType markdown highlight TAGS ctermfg=yellow
-  au FileType markdown call matchadd("TAGS", '#\w\+')
-
-  au FileType markdown highlight CONTEXT ctermfg=blue
-  au FileType markdown call matchadd("CONTEXT", '@\a\+')
-
-  au FileType markdown highlight TODO ctermfg=LightMagenta
-  au FileType markdown call matchadd("TODO", 'TODO\S*')
-
-
 lua << EOF
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -579,3 +574,6 @@ require'nvim-treesitter.configs'.setup {
 
 EOF
 
+
+
+au BufRead,BufNewFile *.nomad set filetype=hcl
