@@ -98,6 +98,9 @@ setenv -g SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
 bind-key right next
 bind-key left prev
 
+bind -n C-Left previous-window
+bind -n C-Right next-window
+
 # switch panes using Alt-arrow without prefix
 bind -n M-Left select-pane -L
 bind -n M-Right select-pane -R
