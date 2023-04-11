@@ -84,8 +84,6 @@ bind-key L resize-pane -R 10
 # Select panes
 bind-key j select-pane -D
 bind-key k select-pane -U
-bind-key h select-pane -L
-bind-key l select-pane -R
 
 # Disable confirm before killing
 bind-key x kill-pane
@@ -100,6 +98,9 @@ bind-key left prev
 
 bind -n C-Left previous-window
 bind -n C-Right next-window
+# bind -n C-h previous-window
+# bind -n C-l next-window
+
 
 # switch panes using Alt-arrow without prefix
 bind -n M-Left select-pane -L
