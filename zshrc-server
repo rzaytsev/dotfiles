@@ -9,7 +9,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="apple"
+ZSH_THEME="afowler"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -88,8 +88,8 @@ export LANG=en_US.UTF-8
 # else
 #   export EDITOR='mvim'
 # fi
-export EDITOR="/usr/bin/nvim"
-alias vi="/usr/bin/nvim"
+export EDITOR="/snap/bin/nvim"
+alias vi="nvim"
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -106,7 +106,7 @@ alias vi="/usr/bin/nvim"
 COLORTERM="truecolor"
 
 #FZF
-FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --color '
+FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git --color auto '
 alias fzt="fzf-tmux"
 FZF_COMPLETION_TRIGGER="@"
 
@@ -130,3 +130,52 @@ source ~/.aliases
 # source $HOME/.cargo/env
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+# if [[ `uname` == Linux ]] then
+#     /usr/bin/keychain $HOME/.ssh/id_rsa
+#     source $HOME/.keychain/$HOST-sh
+# fi
+
+export ANSIBLE_CONFIG=~/.ansible.cfg
+export ANSIBLE_ROLES_PATH=~/infra/ansible/roles
+export ANSIBLE_STDOUT_CALLBACK=yaml
+
+export NOMAD_ADDR=http://nomad-test.dorg.cc:4646
+
+ssh_agent_pid=$(ps aux | grep -i ssh-agent | head -1 | awk '{print $2}')
+if test $ssh_agent_pid ; then export SSH_AGENT_PID="$ssh_agent_pid"; fi
+export SSH_AUTH_SOCK=$(find /tmp -name "*agent*")
+
+
+function ssh(){
+    tmux rename-window "»$(echo $@ | rev | cut -d ' ' -f1 | rev | cut -d . -f 1)"
+    command ssh "$@"
+    tmux set-window-option automatic-rename "on" > /dev/null
+}
+
+function ssf(){
+    hosts=$(cat ~/infra/ansible/inventory/* | grep ansible_host | grep -v '#' | awk '{print $1}')
+    host=$(echo $hosts | fzf --query "$1" --print0 | xargs -0 -o)
+
+    tmux rename-window "»$(echo $host | rev | cut -d ' ' -f1 | rev | cut -d . -f 1)"
+    command ssh "$host"
+    tmux set-window-option automatic-rename "on" > /dev/null
+}
+zle -N ssf
+bindkey '^\' ssf
+
+
+unalias v 2> /dev/null
+function v() {
+  local file
+  file="$(fasd -Rfl "$1" | fzf -1 -0 --no-sort +m)" && vi "${file}" || return 1
+}
+unalias d 2> /dev/null
+function d() {
+  local dir
+  dir="$(fasd -Rdl "$1" | fzf -1 -0 --no-sort +m)" && cd "${dir}" || return 1
+}
+
+
+
